@@ -65,8 +65,8 @@ void testApp::setup(){
     particleColor = playerColor;
     particleColor.r = 200;
     
-    ParticleAttractor newAttractor(200, 400, 100, cyan, false, -1);
-    for (int i=0; i<10; i++){ //maybe to delete
+    ParticleAttractor newAttractor(-100, -100, 100, cyan, false, -1);
+    for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
 //    ParticleAttractor newAttractor(200, 400, 100, cyan, false, -1); //cursor
@@ -104,8 +104,7 @@ void testApp::update(){
         
         pad.getTouchesAsOfPoints(touches2); //function already cleans up the touches vector
         
-        
-        for (int i=0; i<3; i++){
+        for (int i=0; i<pad.getTouchCount(); i++){
             attractors[i].updatePos(touches2[i].x*ofGetWidth(), touches2[i].y*ofGetHeight());
         }
     }
