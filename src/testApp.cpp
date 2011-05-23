@@ -2,6 +2,7 @@
 #include "particle.h"
 #include "particleAttractor.h"
 #include "particleEmitter.h"
+#define OF_ADDON_USING_OFXXMLSETTINGS //dunno why this is necessary, but meh, ofwiki told me to
 
 vector<Particle>particles;
 vector<ParticleAttractor>attractors;
@@ -19,6 +20,8 @@ bool alphaTrail = true, GL3D = false;
 
 bool fixedPoint = false;
 bool buildMode = false; //allows build and setup
+bool saving = false; //when saving is true the key input functions are locked down
+string saveString;
 
 ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
 
@@ -100,7 +103,7 @@ void testApp::update(){
     
     
     
-    if (pad.getTouchCount()>0){
+    if (pad.getTouchCount()>0&&!buildMode){
         
         pad.getTouchesAsOfPoints(touches2); //function already cleans up the touches vector
         
@@ -196,39 +199,71 @@ void testApp::draw(){
 //--------------------------------------------------------------
 void testApp::keyPressed  (int key){
     cout << "Key #" << key << " pressed \n";
-    switch (key) {
+    if (saving){
+        
+        if (key == 13){ //enter (endl)
+            //go through save routine
             
-        case 'a':
-            alphaTrail = !alphaTrail; //toggle alpha trail
-            break;
+            saveLevel(saveString);
             
-        case '3':
-            GL3D = !GL3D; //toggle 3D perspective
-            break;
+            cout << "save string is \""<<saveString<<"\"\n";
             
-        case 'r':
-            attractors.erase(attractors.begin()+1, attractors.begin()+attractors.size());
-            fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
-            break;
-            
-        case 'f':
-            fixedPoint = !fixedPoint;
-            break;
-            
-        case 13:
-            buildMode = !buildMode;
-            break;
-            
-        case 'c': //clear
-            attractors.erase(attractors.begin()+1, attractors.begin()+attractors.size());
-            break;
-            
-        default:
-//            Particle newParticle(emitterX, emitterY, currentEmitterSpeed, -45); //uniform direction for testing
-//            particles.push_back(newParticle);
-            cout << "Key #" << key << " pressed \n";
-            break;
-    }
+            saving = false;
+        }else{
+            if(key==8 && saveString.size()>0) { // backspace
+                saveString = saveString.substr(0, saveString.size()-1); // delete one character
+            } else {
+                saveString.append (1, (char)key );
+            }
+        }
+        
+    }else{
+        switch (key) {
+                
+            case 'a':
+                alphaTrail = !alphaTrail; //toggle alpha trail
+                break;
+                
+            case '3':
+                GL3D = !GL3D; //toggle 3D perspective
+                break;
+                
+            case 'r':
+                attractors.erase(attractors.begin()+1, attractors.begin()+attractors.size());
+                fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
+                break;
+                
+            case 'f':
+                fixedPoint = !fixedPoint;
+                break;
+                
+            case 13:
+                buildMode = !buildMode;
+                break;
+                
+            case 'c': //clear
+                attractors.erase(attractors.begin()+1, attractors.begin()+attractors.size());
+                break;
+                
+            case 's': //save
+                saving = true;
+                break;
+                
+            case 'l': //load
+                loadLevel("new file");
+                break;
+                
+                
+                
+            default:
+                //            Particle newParticle(emitterX, emitterY, currentEmitterSpeed, -45); //uniform direction for testing
+                //            particles.push_back(newParticle);
+                cout << "Key #" << key << " pressed \n";
+                break;
+        } //end switch
+    }//end if saving
+    
+    
 }
 
 //--------------------------------------------------------------
@@ -247,22 +282,24 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
     
-    
-    switch (button){
-        case 0: //left click?
-        {
-            ParticleAttractor newAttractor(x, y, attractors[0].range, green, false, -1);
-            attractors.push_back(newAttractor);
+    if (buildMode){
+        switch (button){
+            case 0: //left click?
+            {
+                ParticleAttractor newAttractor(x, y, attractors[0].range, green, false, -1);
+                attractors.push_back(newAttractor);
+            }
+                break;
+                
+            case 2: //right click
+            {
+                ParticleAttractor newFixedAttractor(x, y, attractors[0].range, red, true, 100);
+                fixedAttractors.push_back(newFixedAttractor);
+            }
+                break;
         }
-        break;
-            
-        case 2: //right click
-        {
-            ParticleAttractor newFixedAttractor(x, y, attractors[0].range, red, true, 100);
-            fixedAttractors.push_back(newFixedAttractor);
-        }
-        break;
     }
+    
     
     cout << "mousebutton "<<button<<"pressed\n";
 }
@@ -317,33 +354,6 @@ void testApp::padUpdates(int & touchCount) {
         }
         
     }else{ //play mode
-        /*
-        int attractorCount = attractors.size();
-        int diff = attractorCount-touchCount;
-        
-        if (touchCount<attractorCount){ //some need to be added
-            
-            cout << "added some attractors\n";
-            
-            
-            ParticleAttractor newAttractor(-100, -100, 100, green, false, -1);
-            for (int i=0; i<diff; i++){
-                attractors.push_back(newAttractor);
-            }
-            
-        }else if (touchCount>attractors.size()){
-            cout << "removed some attractors\n";
-            attractors.erase(attractors.end()+diff, attractors.end());
-        }
-        */
-        /*for (int i=0; i<touchCount; i++){
-            MTouch touch;
-            if (pad.getTouchAt(i, &touch)){
-                attractors[i].updatePos(touch.x*ofGetWidth(), touch.y*ofGetHeight());
-                cout << "touch #"<<i<<" ("<<touch.x<<","<<touch.y<<")\n";
-            }
-            
-        }*/
         
     }
     
@@ -374,4 +384,52 @@ void testApp::removedTouch(int & r) {
 
 float testApp::distanceBetweenTouches(MTouch t1, MTouch t2){
     return powf((pow(t1.x-t2.x, 2)+pow(t1.y-t2.y, 2)), 0.5);
+}
+
+bool testApp::saveLevel(string name){
+//    xml.clear(); //bump loaded data out of the xml object (later could have progress save options by omitting this?)
+    
+    xml.addTag("fixedAttractors");
+        xml.pushTag("fixedAttractors");
+            for (int i=0; i<fixedAttractors.size(); i++){
+                xml.addTag("attractor");
+                xml.pushTag("attractor", xml.getNumTags("attractor")-1); //push last tag (the one just added)
+                    xml.addValue("posX",fixedAttractors[i].posX);
+                    xml.addValue("posY",fixedAttractors[i].posY);
+                    xml.addValue("range",fixedAttractors[i].range);
+                xml.popTag();
+            }
+        xml.popTag();
+    
+    xml.saveFile(name+".sol");
+    
+    return true; //possibly will be some condition later that means save could fail
+}
+
+bool testApp::loadLevel(string name){
+    xml.clear();
+    if (!xml.loadFile(name+".sol")){
+        cout << "The level \""<<name<<".sol\" could not be found\n";
+        return false; //
+    }
+    
+    string xmlDump;
+    xml.copyXmlToString(xmlDump);
+    
+    cout <<"loaded string gives: "<<xmlDump<<"\n";
+    
+    xml.pushTag("fixedAttractors");
+    
+    for (int i=0; i<xml.getNumTags("attractor"); i++){
+        xml.pushTag("attractor", i);
+        
+        ParticleAttractor newFixedAttractor(xml.getValue("posX", 0), xml.getValue("posY", 0), xml.getValue("range", 0.0), red, true, 100);
+        fixedAttractors.push_back(newFixedAttractor);
+        cout << "posX is: "<<newFixedAttractor.posX<<", posY is: "<<newFixedAttractor.posY<<", range is: "<<newFixedAttractor.range<<"\n";
+        
+        xml.popTag();
+    }
+    xml.popTag();
+    
+    return true;
 }

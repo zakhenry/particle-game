@@ -1,9 +1,10 @@
 #ifndef _TEST_APP
 #define _TEST_APP
-
+#define OF_ADDON_USING_OFXXMLSETTINGS
 
 #include "ofMain.h"
 #include "ofxMultiTouchPad.h"
+#include "ofxXmlSettings.h"
 
 class testApp : public ofBaseApp{
 	
@@ -21,6 +22,9 @@ public:
     void mouseReleased(int x, int y, int button);
     void windowResized(int w, int h);
     
+    bool saveLevel(string name);
+    bool loadLevel(string name);
+    
     float 	counter;
     bool	bSmooth;
     
@@ -32,6 +36,8 @@ public:
     
 //private:
     ofxMultiTouchPad pad;
+    
+    ofxXmlSettings xml;
     
     
 };
