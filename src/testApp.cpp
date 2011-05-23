@@ -8,7 +8,8 @@ vector<ParticleAttractor>attractors;
 vector<ParticleAttractor>fixedAttractors;
 vector<ParticleEmitter>emitters;
 
-vector<ofPoint> *touches;
+vector<ofPoint>touches2;
+vector<MTouch> touches;
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -64,8 +65,12 @@ void testApp::setup(){
     particleColor = playerColor;
     particleColor.r = 200;
     
-    ParticleAttractor newAttractor(200, 400, 100, cyan, false, -1); //cursor
-    attractors.push_back(newAttractor);
+    ParticleAttractor newAttractor(200, 400, 100, cyan, false, -1);
+    for (int i=0; i<10; i++){ //maybe to delete
+        attractors.push_back(newAttractor);
+    }
+//    ParticleAttractor newAttractor(200, 400, 100, cyan, false, -1); //cursor
+//    ;
     
     ParticleEmitter newEmitter(100, 100, -45, 2, yellow);
     emitters.push_back(newEmitter);
@@ -84,20 +89,30 @@ void testApp::setup(){
 void testApp::update(){
         
     ofSetBackgroundAuto(!alphaTrail);
-    attractors[0].updatePos(mouseX, mouseY); //move the first emitter with the mouse
+    if (attractors.size()>0&&buildMode){
+        attractors[0].updatePos(mouseX, mouseY); //move the first emitter with the mouse
+    }
     
     for (int i=0; i<emitters.size(); i++){
         emitters[i].update(attractors); //update every emitter (and in turn every particle will be updated)
         emitters[i].update(fixedAttractors); //update every emitter (and in turn every particle will be updated)
     }
     
-//    pad.getTouchesAsOfPoints(touches); //function already cleans up the touches vector
     
-//    for (int i=0; i<touches->size(); i++){
-//        attractors[i].updatePos(touches[i].x, touches[i].y);
-//    }
     
-//    cout << "there is "<<touches->size()<<" touches on the pad\n";
+    if (pad.getTouchCount()>0){
+        
+        pad.getTouchesAsOfPoints(touches2); //function already cleans up the touches vector
+        
+        
+        for (int i=0; i<3; i++){
+            attractors[i].updatePos(touches2[i].x*ofGetWidth(), touches2[i].y*ofGetHeight());
+        }
+    }
+    
+    
+    
+//    cout << "there is "<<attractors.size()<<" attractors on the pad\n";
     
     ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
@@ -264,12 +279,12 @@ void testApp::windowResized(int w, int h){
     
 }
 
-void testApp::padUpdates(int & touches) {
+void testApp::padUpdates(int & touchCount) {
 //    cout << "pad updates & has "<<t<<" touches\n";
     
     if (buildMode){
         
-        if (touches==2){ //scaling
+        if (touchCount==2){ //scaling
             MTouch t1,t2;
             if (pad.getTouchAt(0,&t1) && pad.getTouchAt(1,&t2) ){
                 float newTouchScale = distanceBetweenTouches(t1, t2);
@@ -281,7 +296,7 @@ void testApp::padUpdates(int & touches) {
                 currentTouchScale = distanceBetweenTouches(t1, t2);
                 //            cout << "Distance between two fingers is: "<<distanceBetweenTouches(t1, t2)<<"\n";
             }
-        }else if (touches==3){
+        }else if (touchCount==3){
             
             MTouch t1, t2, t3;
             
@@ -303,24 +318,59 @@ void testApp::padUpdates(int & touches) {
         }
         
     }else{ //play mode
+        /*
+        int attractorCount = attractors.size();
+        int diff = attractorCount-touchCount;
         
-        for (int i=0; i<touches; i++){
+        if (touchCount<attractorCount){ //some need to be added
             
+            cout << "added some attractors\n";
+            
+            
+            ParticleAttractor newAttractor(-100, -100, 100, green, false, -1);
+            for (int i=0; i<diff; i++){
+                attractors.push_back(newAttractor);
+            }
+            
+        }else if (touchCount>attractors.size()){
+            cout << "removed some attractors\n";
+            attractors.erase(attractors.end()+diff, attractors.end());
         }
+        */
+        /*for (int i=0; i<touchCount; i++){
+            MTouch touch;
+            if (pad.getTouchAt(i, &touch)){
+                attractors[i].updatePos(touch.x*ofGetWidth(), touch.y*ofGetHeight());
+                cout << "touch #"<<i<<" ("<<touch.x<<","<<touch.y<<")\n";
+            }
+            
+        }*/
         
     }
     
 }
 
 void testApp::newTouch(int & n) {
-    cout << "++++++ a new touch"<<n<<"\n";
-//    MTouch newTouch;
-//    touches.push_back(newTouch);
+//    cout << "++++++ a new touch"<<n<<"\n";
+    
+    if (!buildMode){
+//        MTouch newTouch;
+//        touches.push_back(newTouch);
+//        ParticleAttractor newAttractor(-100, -100, 100, green, false, -1);
+//        attractors.push_back(newAttractor);
+    }
 }
 
 void testApp::removedTouch(int & r) {
-    cout << "------ a removed touch"<<r<<"\n";
+//    cout << "------ a removed touch"<<r<<"\n";
+    
     currentTouchScale = 0;
+    
+    if (!buildMode){
+        
+//        touches.erase(touches.end()); //pop the last element off 
+//        attractors.erase(attractors.end()); //pop the last element off 
+    }
 }
 
 float testApp::distanceBetweenTouches(MTouch t1, MTouch t2){
