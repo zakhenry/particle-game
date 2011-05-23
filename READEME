@@ -1,0 +1,12 @@
+Current controls:
+
+3 -> go into 3D plane mode (very incomplete)
+a -> toggle alpha blending (sexy particle trails)
+
+[enter] -> go into level builder mode
+	in level build mode:
+	~ [left click] -> place user attractor
+	~ [right click] -> place level attractor
+	~ s -> save game (after pressing s, type in the level name and hit [enter] . The game will be saved as an xml .sol file in ./bin/data
+
+l -> loads the level named "new file.sol" (this will be able to be user entered or list selectable?) 
