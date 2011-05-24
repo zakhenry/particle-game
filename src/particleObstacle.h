@@ -23,14 +23,15 @@ class ParticleObstacle {
     void rotateCoordAboutPoint(float angle, float originX, float originY, float xInit, float yInit, float &xEnd, float &yEnd);
     
     bool reflectParticles;
-    ofColor color;
     
     
-    float rotation;
+    
+    
 	
 public:
-    
+    ofColor color;
     ofRectangle rectangle;
+    float rotation;
     ParticleObstacle(ofRectangle rectangle, float rotation, bool reflect, ofColor color); //constructor (void)
     
     
@@ -40,7 +41,6 @@ public:
     
 	int draw(bool GL3D);
     int updatePosDim(ofRectangle);
-    int updateRotation(float angle);
 	
 	
 };

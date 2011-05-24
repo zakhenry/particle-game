@@ -24,11 +24,12 @@ class ParticleAttractor {
     float angleBetweenAngles(float angleA, float angleB, bool clockwise);
     
     bool type;
-    ofColor color;
+    
     
     int count;
 	
 public:
+    ofColor color;
     
     ParticleAttractor(int posX, int posY, float range, ofColor color, bool fixedPoint, int max); //constructor (void)
     

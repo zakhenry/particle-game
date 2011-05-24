@@ -18,9 +18,9 @@ ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, bla
 
 //build cursors
 
-ParticleAttractor attractorCursor(-100, -100, 100, cyan, false, -1);
-ParticleEmitter emitterCursor(-100, -100, 0, 3, cyan);
-ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, false, green);
+ParticleAttractor attractorCursor(-100, -100, 100, red, false, -1);
+ParticleEmitter emitterCursor(-100, -100, 0, 3, red);
+ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, false, red); //colors wont work yet
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -79,6 +79,10 @@ void testApp::setup(){
     
     particleColor = playerColor;
     particleColor.r = 200;
+    
+    attractorCursor.color = red;
+    emitterCursor.color = green;
+    obstacleCursor.color = blue;
     
     ParticleAttractor newAttractor(-100, -100, 100, cyan, false, -1);
     for (int i=0; i<5; i++){ //maybe to delete
@@ -305,9 +309,12 @@ void testApp::keyPressed  (int key){
                 break;
                 
             case 'r':
-                attractors.erase(attractors.begin()+1, attractors.begin()+attractors.size());
-                fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
-                break;
+            {
+                if (buildMode){
+                    clearLevel();
+                }
+            }
+            break;
                 
             case 'f':
                 fixedPoint = !fixedPoint;
@@ -318,7 +325,9 @@ void testApp::keyPressed  (int key){
                 break;
                 
             case 'c': //clear
-                attractors.erase(attractors.begin()+1, attractors.begin()+attractors.size());
+                if (buildMode){
+                    attractors.erase(attractors.begin(), attractors.end());
+                }
                 break;
                 
             case 's': //save
@@ -342,22 +351,25 @@ void testApp::keyPressed  (int key){
                 break;
                 
                 
-            case 32: //space
+            case 127: //backspace
             {
                 switch (currentBuildItem) {
                     case attractor:
-                        //do something
-                        cout << "placed an attractor\n";
+                        if (fixedAttractors.size()!=0){
+                            fixedAttractors.erase(fixedAttractors.end());
+                        }
                         break;
                         
                     case emitter:
-                        //do something
-                        cout << "placed an emitter\n";
+                        if (emitters.size()!=0){
+                            emitters.erase(emitters.end());   
+                        }
                         break;
                         
                     case obstacle:
-                        //do something
-                        cout << "placed an obstacle\n";
+                        if (obstacles.size()!=0){
+                            obstacles.erase(obstacles.end());
+                        }
                         break;
                         
                     default:
@@ -397,19 +409,39 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
     
-    if (buildMode&&currentBuildItem==attractor){
+    if (buildMode){
         switch (button){
             case 0: //left click?
             {
-                ParticleAttractor newAttractor(x, y, attractors[0].range, green, false, -1);
-                attractors.push_back(newAttractor);
+                switch (currentBuildItem) {
+                    case attractor:
+                        
+                        cout << "placed an attractor\n";
+                        fixedAttractors.push_back(attractorCursor);
+                        break;
+                        
+                    case emitter:
+                        emitters.push_back(emitterCursor);
+                        break;
+                        
+                    case obstacle:
+                        obstacles.push_back(obstacleCursor);
+                        break;
+                        
+                    default:
+                        break;
+                }
+                
             }
                 break;
                 
             case 2: //right click
             {
-                ParticleAttractor newFixedAttractor(x, y, attractors[0].range, red, true, 100);
-                fixedAttractors.push_back(newFixedAttractor);
+                if (currentBuildItem==attractor){
+                    ParticleAttractor newUserAttractor(x, y, attractorCursor.range, cyan, true, -1);
+                    attractors.push_back(newUserAttractor);
+                }
+                
             }
                 break;
         }
@@ -439,11 +471,32 @@ void testApp::padUpdates(int & touchCount) {
             MTouch t1,t2;
             if (pad.getTouchAt(0,&t1) && pad.getTouchAt(1,&t2) ){
                 float newTouchScale = distanceBetweenTouches(t1, t2);
-                if (newTouchScale>currentTouchScale){
-                    attractorCursor.range += 0.5;
-                }else{
-                    attractorCursor.range -= 0.5;
+                float alteration = 0;
+                    if (newTouchScale>currentTouchScale){
+                        alteration ++;
+                    }else{
+                        alteration --;
+                    }
+                
+                switch (currentBuildItem) {
+                    case attractor:
+                        attractorCursor.range += alteration/2;
+                        break;
+                        
+                    case emitter:
+                        emitterCursor.particleSpeed += alteration/40;
+                        break;
+                        
+                    case obstacle:
+                        //do something
+                        obstacleCursor.rectangle.width += alteration/2;
+                        obstacleCursor.rectangle.height += alteration/2;
+                        break;
+                        
+                    default:
+                        break;
                 }
+                
                 currentTouchScale = distanceBetweenTouches(t1, t2);
                 //            cout << "Distance between two fingers is: "<<distanceBetweenTouches(t1, t2)<<"\n";
             }
@@ -458,11 +511,40 @@ void testApp::padUpdates(int & touchCount) {
                 //            cout << "The averageTouchHeight is: " << averageTouchHeight << "\n";
                 
                 if (abs(averageTouchHeight-current3TouchHeight)>0.05){
+                    float alteration;
+                    
                     if (averageTouchHeight>current3TouchHeight){
-                        cameraVerticalAngle+=5;
+                        alteration++;
                     }else{
-                        cameraVerticalAngle-=5;
+                        alteration--;
                     }
+                    
+                    if (!buildMode&&GL3D){
+                        
+                        cameraVerticalAngle += alteration*5;
+                        
+                    }else if (buildMode){
+                        switch (currentBuildItem) {
+                            case attractor:
+                                //do nothing
+                                break;
+                                
+                            case emitter:
+                                emitterCursor.streamAngle += alteration*2;
+                                break;
+                                
+                            case obstacle:
+                                //do something
+                                obstacleCursor.rotation += alteration*2;
+                                break;
+                                
+                            default:
+                                break;
+                        }
+
+                    }
+                    
+                                        
                     current3TouchHeight = averageTouchHeight;
                 }
             }
@@ -522,6 +604,7 @@ bool testApp::saveLevel(string name){
 }
 
 bool testApp::loadLevel(string name){
+    clearLevel();
     xml.clear();
     if (!xml.loadFile(name+".sol")){
         cout << "The level \""<<name<<".sol\" could not be found\n";
@@ -547,4 +630,11 @@ bool testApp::loadLevel(string name){
     xml.popTag();
     
     return true;
+}
+
+void testApp::clearLevel(){
+    attractors.erase(attractors.begin(), attractors.begin()+attractors.size());
+    fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
+    emitters.erase(emitters.begin(), emitters.end());
+    obstacles.erase(obstacles.begin(), obstacles.end());
 }

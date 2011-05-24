@@ -22,18 +22,20 @@ class ParticleEmitter {
     int posX, posY;
     bool addParticle;
     int lastSecondFired;
-    float particleSpeed, streamAngle;
-    ofColor color;
+    
+    
 	
 public:
     
+    ofColor color;
+    
+    float particleSpeed, streamAngle;
     string type;
     vector<Particle>particles;
 
     ParticleEmitter(int posX, int posY, float angle, float particleSpeed, ofColor color); //stream constructor
     
     void updatePosition(int newX, int newY);
-    void updateAngle(int newAngle);
     
 	void update(vector<ParticleAttractor>&attractors, vector<ParticleObstacle>&obstacles);
     void draw(bool GL3D);

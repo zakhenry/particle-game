@@ -77,7 +77,3 @@ void ParticleEmitter::updatePosition(int newX, int newY){
     posX = newX;
     posY = newY;
 }
-
-void ParticleEmitter::updateAngle(int newAngle){
-    streamAngle = newAngle;
-}

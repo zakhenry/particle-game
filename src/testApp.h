@@ -24,6 +24,7 @@ public:
     
     bool saveLevel(string name);
     bool loadLevel(string name);
+    void clearLevel();
     
     float 	counter;
     bool	bSmooth;

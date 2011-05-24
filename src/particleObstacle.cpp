@@ -52,12 +52,6 @@ int ParticleObstacle::updatePosDim(ofRectangle newRect){
     return 0;
 }
 
-int ParticleObstacle::updateRotation(float newRotation){
-    rotation = newRotation;
-    return 0;
-}
-
-
 int ParticleObstacle::draw(bool GL3D){
     ofSetColor(color.r, color.g, color.b);
     
