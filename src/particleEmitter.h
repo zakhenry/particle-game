@@ -19,13 +19,15 @@ class ParticleEmitter {
 	
 	//private
     
-    int posX, posY;
+    
     bool addParticle;
     int lastSecondFired;
     
     
 	
 public:
+    
+    int posX, posY;
     
     ofColor color;
     

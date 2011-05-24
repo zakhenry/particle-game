@@ -335,7 +335,7 @@ void testApp::keyPressed  (int key){
                 break;
                 
             case 'l': //load
-                loadLevel("new file");
+                loadLevel("savegame");
                 break;
                 
             case 'a': //attractor mode
@@ -586,17 +586,46 @@ float testApp::distanceBetweenTouches(MTouch t1, MTouch t2){
 bool testApp::saveLevel(string name){
 //    xml.clear(); //bump loaded data out of the xml object (later could have progress save options by omitting this?)
     
-    xml.addTag("fixedAttractors");
-        xml.pushTag("fixedAttractors");
+    xml.addTag("attractors");
+        xml.pushTag("attractors");
             for (int i=0; i<fixedAttractors.size(); i++){
                 xml.addTag("attractor");
                 xml.pushTag("attractor", xml.getNumTags("attractor")-1); //push last tag (the one just added)
-                    xml.addValue("posX",fixedAttractors[i].posX);
-                    xml.addValue("posY",fixedAttractors[i].posY);
+                    xml.addValue("x",fixedAttractors[i].posX);
+                    xml.addValue("y",fixedAttractors[i].posY);
                     xml.addValue("range",fixedAttractors[i].range);
                 xml.popTag();
             }
         xml.popTag();
+    
+    xml.addTag("emitters");
+        xml.pushTag("emitters");
+        for (int i=0; i<emitters.size(); i++){
+            xml.addTag("emitter");
+            xml.pushTag("emitter", xml.getNumTags("emitter")-1); //push last tag (the one just added)
+            xml.addValue("x",emitters[i].posX);
+            xml.addValue("y",emitters[i].posY);
+            xml.addValue("angle",emitters[i].streamAngle);
+            xml.addValue("speed",emitters[i].particleSpeed);
+            xml.popTag();
+        }
+        xml.popTag();
+    
+    xml.addTag("obstacles");
+        xml.pushTag("obstacles");
+        for (int i=0; i<obstacles.size(); i++){
+            xml.addTag("obstacle");
+            xml.pushTag("obstacle", xml.getNumTags("obstacle")-1); //push last tag (the one just added)
+            xml.addValue("x",obstacles[i].rectangle.x);
+            xml.addValue("y",obstacles[i].rectangle.y);
+            xml.addValue("width",obstacles[i].rectangle.width);
+            xml.addValue("height",obstacles[i].rectangle.height);
+            xml.addValue("rotation",obstacles[i].rotation);
+            xml.popTag();
+        }
+        xml.popTag();
+    
+    
     
     xml.saveFile(name+".sol");
     
@@ -616,15 +645,30 @@ bool testApp::loadLevel(string name){
     
     cout <<"loaded string gives: "<<xmlDump<<"\n";
     
-    xml.pushTag("fixedAttractors");
-    
+    xml.pushTag("attractors");
     for (int i=0; i<xml.getNumTags("attractor"); i++){
         xml.pushTag("attractor", i);
-        
-        ParticleAttractor newFixedAttractor(xml.getValue("posX", 0), xml.getValue("posY", 0), xml.getValue("range", 0.0), red, true, 100);
+        ParticleAttractor newFixedAttractor(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("range", 0.0), red, true, 100);
         fixedAttractors.push_back(newFixedAttractor);
-        cout << "posX is: "<<newFixedAttractor.posX<<", posY is: "<<newFixedAttractor.posY<<", range is: "<<newFixedAttractor.range<<"\n";
-        
+//        cout << "posX is: "<<newFixedAttractor.posX<<", posY is: "<<newFixedAttractor.posY<<", range is: "<<newFixedAttractor.range<<"\n";
+        xml.popTag();
+    }
+    xml.popTag();
+    
+    xml.pushTag("emitters");
+    for (int i=0; i<xml.getNumTags("emitter"); i++){
+        xml.pushTag("emitter", i);
+        ParticleEmitter newEmitter(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("angle", 0), xml.getValue("speed", 0), green); //int posX, int posY, float angle, float particleSpeed, ofColor color
+        emitters.push_back(newEmitter);
+        xml.popTag();
+    }
+    xml.popTag();
+    
+    xml.pushTag("obstacles");
+    for (int i=0; i<xml.getNumTags("obstacle"); i++){
+        xml.pushTag("obstacle", i);
+        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), false, blue); //ofRectangle rectangle, float rotation, bool reflect, ofColor color
+        obstacles.push_back(newObstacle);
         xml.popTag();
     }
     xml.popTag();
@@ -637,4 +681,9 @@ void testApp::clearLevel(){
     fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
     emitters.erase(emitters.begin(), emitters.end());
     obstacles.erase(obstacles.begin(), obstacles.end());
+    
+    ParticleAttractor newAttractor(-100, -100, 100, cyan, false, -1); //attractor for the trackpad to access
+    for (int i=0; i<5; i++){ //maybe to delete
+        attractors.push_back(newAttractor);
+    }
 }
