@@ -35,7 +35,7 @@ public:
     void updatePosition(int newX, int newY);
     void updateAngle(int newAngle);
     
-	void update(vector<ParticleAttractor>&attractors); //really should be a pointer? :(
+	void update(vector<ParticleAttractor>&attractors, vector<ParticleObstacle>&obstacles);
     void draw(bool GL3D);
 };
 

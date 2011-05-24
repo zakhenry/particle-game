@@ -2,12 +2,14 @@
 #include "particle.h"
 #include "particleAttractor.h"
 #include "particleEmitter.h"
+#include "particleObstacle.h"
 #define OF_ADDON_USING_OFXXMLSETTINGS //dunno why this is necessary, but meh, ofwiki told me to
 
 vector<Particle>particles;
 vector<ParticleAttractor>attractors;
 vector<ParticleAttractor>fixedAttractors;
 vector<ParticleEmitter>emitters;
+vector<ParticleObstacle>obstacles;
 
 vector<ofPoint>touches2;
 vector<MTouch> touches;
@@ -72,14 +74,15 @@ void testApp::setup(){
     for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
-//    ParticleAttractor newAttractor(200, 400, 100, cyan, false, -1); //cursor
-//    ;
     
     ParticleEmitter newEmitter(100, 100, -45, 2, yellow);
     emitters.push_back(newEmitter);
     
     ParticleEmitter anotherEmitter(100, 500, 0, 3, cyan);
     emitters.push_back(anotherEmitter);
+    
+    ParticleObstacle newObstacle(ofRectangle(300, 450, 200, 100), -45, false, green);
+    obstacles.push_back(newObstacle);
     
     
     //some model / light stuff
@@ -92,16 +95,19 @@ void testApp::setup(){
 void testApp::update(){
         
     ofSetBackgroundAuto(!alphaTrail);
+    
     if (attractors.size()>0&&buildMode){
         attractors[0].updatePos(mouseX, mouseY); //move the first emitter with the mouse
     }
     
+    vector<ParticleAttractor>allAttractors; //concat vectors
+    allAttractors.insert(allAttractors.end(), attractors.begin(), attractors.end());
+    allAttractors.insert(allAttractors.end(), fixedAttractors.begin(), fixedAttractors.end());
+    
     for (int i=0; i<emitters.size(); i++){
-        emitters[i].update(attractors); //update every emitter (and in turn every particle will be updated)
-        emitters[i].update(fixedAttractors); //update every emitter (and in turn every particle will be updated)
+        emitters[i].update(allAttractors, obstacles); //update every emitter (and in turn every particle will be updated, so the attractors will work)
+//        emitters[i].update(fixedAttractors); //update every emitter (and in turn every particle will be updated, so the fixed attractors will work)
     }
-    
-    
     
     if (pad.getTouchCount()>0&&!buildMode){
         
@@ -169,6 +175,10 @@ void testApp::draw(){
         
     }
     
+    for (int i=0; i<obstacles.size(); i++){
+        obstacles[i].draw(GL3D);
+    }
+    
     for (int i=0; i<emitters.size(); i++){
         emitters[i].draw(GL3D);
     }
@@ -180,6 +190,8 @@ void testApp::draw(){
     for (int i=0; i<fixedAttractors.size(); i++){
         fixedAttractors[i].draw(GL3D);
     }
+    
+    
     
     if (GL3D){
         glPopMatrix();

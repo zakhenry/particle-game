@@ -20,7 +20,7 @@ ParticleEmitter::ParticleEmitter(int newPosX, int newPosY, float angle, float ne
     color = newColor;
 }
 
-void ParticleEmitter::update(vector<ParticleAttractor>&attractors){
+void ParticleEmitter::update(vector<ParticleAttractor>&attractors, vector<ParticleObstacle>&obstacles){ //yes this is a seriously weird way to pass around influence
     
     if (particles.size()>0){
         
@@ -33,6 +33,10 @@ void ParticleEmitter::update(vector<ParticleAttractor>&attractors){
         }
         for (int i=0; i<attractors.size(); i++){ //for every attractor
             attractors[i].influenceParticles(particles);
+        }
+        
+        for (int i=0; i<obstacles.size(); i++){ //for every obstacle
+            obstacles[i].influenceParticles(particles);
         }
     }
     

@@ -12,6 +12,7 @@
 
 #include "ofMain.h"
 #include "particleAttractor.h"
+#include "particleObstacle.h"
 
 class Particle {
     
