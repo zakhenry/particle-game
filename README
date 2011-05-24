@@ -1,12 +1,20 @@
 Current controls:
 
 3 -> go into 3D plane mode (very incomplete)
-a -> toggle alpha blending (sexy particle trails)
+b -> toggle alpha blending (sexy particle trails)
 
 [enter] -> go into level builder mode
 	in level build mode:
-	~ [left click] -> place user attractor
-	~ [right click] -> place level attractor
-	~ s -> save game (after pressing s, type in the level name and hit [enter] . The game will be saved as an xml .sol file in ./bin/data
-
+	a -> use build item attractor
+	e -> use build item emitter
+	o -> use build item obstacle
+		Build items:
+		~ [left click] -> place build item
+		~ [right click (only with attractors)] -> place user attractor
+		~ [two finger pinch] -> scale attractor or obstacle, or change speed of emitter particles
+		~ [three finger scroll] -> change angle/rotation of emitter or obstacle
+		~ [backspace] -> remove last placed item (of the type currently being used)
+	s -> save game (after pressing s, type in the level name and hit [enter] . The game will be saved as an xml .sol file in ./bin/data
+	r -> wipes level clear for fresh building
+	c -> erases all player attractors
 l -> loads the level named "new file.sol" (this will be able to be user entered or list selectable?) 
