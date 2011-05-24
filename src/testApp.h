@@ -35,6 +35,8 @@ public:
     
     float distanceBetweenTouches(MTouch t1, MTouch t2);
     
+    int listLevels(string dir, vector<string> &files);
+    
 //private:
     ofxMultiTouchPad pad;
     

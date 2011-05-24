@@ -14,6 +14,7 @@
 		6C8BCBA1138A7B5E00E72D11 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BCB9B138A7B5E00E72D11 /* tinyxmlparser.cpp */; };
 		6C8BCBA2138A7B5E00E72D11 /* ofxXmlSettings.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BCB9D138A7B5E00E72D11 /* ofxXmlSettings.cpp */; };
 		6C8BCBB9138B237700E72D11 /* particleObstacle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BCBB7138B237600E72D11 /* particleObstacle.cpp */; };
+		6C8BCBD1138BAC2D00E72D11 /* levelHandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BCBCF138BAC2D00E72D11 /* levelHandler.cpp */; };
 		6CA25877137525C9005BF5F5 /* particleEmitter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CA25876137525C9005BF5F5 /* particleEmitter.cpp */; };
 		6CB5932713741CC200C01248 /* ofxMultiTouchPad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CB5932513741CC200C01248 /* ofxMultiTouchPad.cpp */; };
 		6CB5933213741E7D00C01248 /* MultitouchSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6CB5933113741E7D00C01248 /* MultitouchSupport.framework */; };
@@ -101,6 +102,8 @@
 		6C8BCB9E138A7B5E00E72D11 /* ofxXmlSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxXmlSettings.h; sourceTree = "<group>"; };
 		6C8BCBB7138B237600E72D11 /* particleObstacle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particleObstacle.cpp; sourceTree = "<group>"; };
 		6C8BCBB8138B237700E72D11 /* particleObstacle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particleObstacle.h; sourceTree = "<group>"; };
+		6C8BCBCF138BAC2D00E72D11 /* levelHandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = levelHandler.cpp; sourceTree = "<group>"; };
+		6C8BCBD0138BAC2D00E72D11 /* levelHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = levelHandler.h; sourceTree = "<group>"; };
 		6CA25875137525AB005BF5F5 /* particleEmitter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = particleEmitter.h; sourceTree = "<group>"; };
 		6CA25876137525C9005BF5F5 /* particleEmitter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = particleEmitter.cpp; sourceTree = "<group>"; };
 		6CB5932413741CC200C01248 /* MTTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MTTypes.h; sourceTree = "<group>"; };
@@ -439,6 +442,8 @@
 				E4B69E1D0A3A1BDC003C02F2 /* main.cpp */,
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				E4B69E1E0A3A1BDC003C02F2 /* testApp.cpp */,
+				6C8BCBD0138BAC2D00E72D11 /* levelHandler.h */,
+				6C8BCBCF138BAC2D00E72D11 /* levelHandler.cpp */,
 				6CA25875137525AB005BF5F5 /* particleEmitter.h */,
 				6CA25876137525C9005BF5F5 /* particleEmitter.cpp */,
 				6C46A647136F796900DFCF18 /* particleAttractor.h */,
@@ -627,6 +632,7 @@
 				6C8BCBA1138A7B5E00E72D11 /* tinyxmlparser.cpp in Sources */,
 				6C8BCBA2138A7B5E00E72D11 /* ofxXmlSettings.cpp in Sources */,
 				6C8BCBB9138B237700E72D11 /* particleObstacle.cpp in Sources */,
+				6C8BCBD1138BAC2D00E72D11 /* levelHandler.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

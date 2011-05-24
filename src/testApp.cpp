@@ -101,9 +101,8 @@ void testApp::setup(){
     
     currentBuildItem = attractor;
     
-    //some model / light stuff
-   // glEnable (GL_DEPTH_TEST);
-    //glShadeModel (GL_SMOOTH);
+    vector<string>files;
+    listLevels("../../../data", files);
      
 }
 
@@ -530,7 +529,7 @@ void testApp::padUpdates(int & touchCount) {
                                 break;
                                 
                             case emitter:
-                                emitterCursor.streamAngle += alteration*2;
+                                emitterCursor.streamAngle -= alteration*2;
                                 break;
                                 
                             case obstacle:
@@ -686,4 +685,29 @@ void testApp::clearLevel(){
     for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
+}
+
+int testApp::listLevels(string dir, vector<string> &levels){
+
+        vector<string>files;
+    
+        DIR *dp;
+        struct dirent *dirp;
+        if((dp  = opendir(dir.c_str())) == NULL) {
+            cout << "Error(" << errno << ") opening " << dir << endl;
+            return errno;
+        }
+        
+        while ((dirp = readdir(dp)) != NULL) {
+            files.push_back(string(dirp->d_name));
+        }
+        closedir(dp);
+          
+        string fileext = ".sol";
+        for (int i=0; i<files.size(); i++){
+            if (files[i].find(fileext)!=string::npos){ //if string is found
+                levels.push_back(files[i]);
+            }
+        }
+        return 0;
 }
