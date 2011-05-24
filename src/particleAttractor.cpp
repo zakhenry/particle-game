@@ -10,7 +10,7 @@
 #include "particleAttractor.h"
 
 
-ParticleAttractor::ParticleAttractor(int newX, int newY, float newRange, ofColor newColor, bool newFixedPoint, int newMax){ //constructor
+ParticleAttractor::ParticleAttractor(int newX, int newY, float newRange, ofColor newColor){ //constructor
 //	cout << "Particle attractor created \n";
     posX = newX;
     posY = newY;
@@ -18,8 +18,6 @@ ParticleAttractor::ParticleAttractor(int newX, int newY, float newRange, ofColor
     range = newRange;
     
     color = newColor;
-    max = newMax;
-    fixedPoint = newFixedPoint;
 }
 
 float ParticleAttractor::angleBetweenAngles(float angleA, float angleB, bool clockwise){
@@ -117,8 +115,12 @@ int ParticleAttractor::draw(bool GL3D){
         ofFill();		// draw "filled shapes"
         ofCircle(posX, posY, 5);
         ofNoFill();
-        ofCircle(posX, posY, range );
+        ofCircle(posX, posY, range);
         ofFill();
+        
+        
+        
+        
     }
     
     

@@ -4,7 +4,6 @@
 
 #include "ofMain.h"
 #include "ofxMultiTouchPad.h"
-#include "ofxXmlSettings.h" //not needed soon ##
 #include "particle.h"
 #include "particleAttractor.h"
 #include "particleEmitter.h"
@@ -58,7 +57,6 @@ public:
 
     ofxMultiTouchPad pad;
     
-    ofxXmlSettings xml; //to remove soon ##
     
     LevelHandler levelHandler;
     

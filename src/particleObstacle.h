@@ -18,25 +18,18 @@ class ParticleObstacle {
 	
 	//private
     
-    
-    bool particleInHitbox(float particlePosX, float particlePosY);
     void rotateCoordAboutPoint(float angle, float originX, float originY, float xInit, float yInit, float &xEnd, float &yEnd);
     
-    bool reflectParticles;
-    
-    
-    
-    
-	
 public:
+    
     ofColor color;
     ofRectangle rectangle;
     float rotation;
-    ParticleObstacle(ofRectangle rectangle, float rotation, bool reflect, ofColor color); //constructor (void)
+    ParticleObstacle(ofRectangle rectangle, float rotation, ofColor color); //constructor (void)
     
     
     int influenceParticles(vector<Particle>& particles);
-    void setNewParticleVelocity(Particle& particle, bool reflect);
+    void setNewParticleVelocity(Particle& particle);
     
     
 	int draw(bool GL3D);

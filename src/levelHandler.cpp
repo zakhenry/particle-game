@@ -13,6 +13,13 @@ LevelHandler::LevelHandler(){ //stream constructor
     
     cout << "Level handler created\n";
     listLevels("../../../data", levels);
+    
+    cout << "There is "<<levels.size()<<" levels available (";
+    for (int i=0; i<levels.size(); i++){
+        cout << levels[i]<<", ";
+    }
+    cout << ")\n";
+    
     ofColor black;
     black.r = 0;
     black.g = 0;
@@ -90,7 +97,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("attractors");
     for (int i=0; i<xml.getNumTags("attractor"); i++){
         xml.pushTag("attractor", i);
-        ParticleAttractor newFixedAttractor(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("range", 0.0), red, true, 100);
+        ParticleAttractor newFixedAttractor(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("range", 0.0), red);
         attractors.push_back(newFixedAttractor);
         //        cout << "posX is: "<<newFixedAttractor.posX<<", posY is: "<<newFixedAttractor.posY<<", range is: "<<newFixedAttractor.range<<"\n";
         xml.popTag();
@@ -109,7 +116,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("obstacles");
     for (int i=0; i<xml.getNumTags("obstacle"); i++){
         xml.pushTag("obstacle", i);
-        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), false, blue); //ofRectangle rectangle, float rotation, bool reflect, ofColor color
+        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), blue); //## for now fixed to normal type
         obstacles.push_back(newObstacle);
         xml.popTag();
     }

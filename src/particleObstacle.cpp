@@ -9,13 +9,12 @@
 #include "particleObstacle.h"
 
 
-ParticleObstacle::ParticleObstacle(ofRectangle newRectangle, float newRotation, bool newReflect, ofColor newColor){ //constructor
-    //	cout << "Particle attractor created \n";
+ParticleObstacle::ParticleObstacle(ofRectangle newRectangle, float newRotation, ofColor newColor){ //constructor
+    cout << "Particle obstacle created \n";
     
     rectangle = newRectangle;
     rotation = newRotation;
     color = newColor;
-    reflectParticles = newReflect;
 }
 
 
@@ -29,22 +28,17 @@ int ParticleObstacle::influenceParticles(vector<Particle>& particles){
         
         if (rectangle.inside(particleRotX, particleRotY)){
 //            cout << "particle is inside obstacle\n";
-            setNewParticleVelocity(particles[i], reflectParticles);
+            setNewParticleVelocity(particles[i]);
         }
     }
     
     return 0;
 }
 
-void ParticleObstacle::setNewParticleVelocity(Particle& particle, bool reflect){
+void ParticleObstacle::setNewParticleVelocity(Particle& particle){
     
-    if (reflect){
-        //work some reflection magic
-        
-    }else{
-        particle.destroy = true; // 'absorb' the particle
-    }
-    
+    particle.destroy = true; // 'absorb' the particle
+
 }
 
 int ParticleObstacle::updatePosDim(ofRectangle newRect){
@@ -59,19 +53,46 @@ int ParticleObstacle::draw(bool GL3D){
         ofNoFill();
 //        ofRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }else{
+        
         ofPushMatrix();
         ofTranslate(rectangle.x+rectangle.width/2, rectangle.y+rectangle.height/2, 0);//, rectangle.x+rectangle.width/2, 0, rectangle.y+rectangle.height/2
         ofRotateZ(rotation);
-        ofFill();		// draw "filled shapes"
+        		// draw "filled shapes"
         ofSetRectMode(OF_RECTMODE_CENTER);
         ofRect(0, 0, rectangle.width, rectangle.height);
         ofSetRectMode(OF_RECTMODE_CORNER); //go back to normal mode
+        
+        ofSetColor(0, 0, 0);
+        /*if (counter){
+            ofBeginShape();
+            int resolution = 100;
+            float sweep = trappedParticles.size()/particleMax; //0 to 1
+//            cout <<"particle count: "<<trappedParticles.size()<<" max:"<<particleMax<<"\n";
+            if (sweep>1){
+                sweep = 1;
+                color.g = 255;
+            }
+            float radius1 = min(rectangle.width, rectangle.height)/2-10;
+            float radius2 = radius1-10;
+            for(int i = 0; i <= resolution; i++) { 
+                float angle = i*sweep*2*PI/resolution; 
+                ofVertex((cos(angle) * radius1), (sin(angle) * radius1));
+            }
+            for(int i = resolution+1; i != 0; i--) { 
+                float angle = i*sweep*2*PI/resolution; 
+                ofVertex((cos(angle) * radius2), (sin(angle) * radius2));
+            }
+            ofEndShape();
+        }*/
+        
+        
         ofPopMatrix();
     }
     
     
     
 }
+
 
 void ParticleObstacle::rotateCoordAboutPoint(float angle, float originX, float originY, float xInit, float yInit, float &xEnd, float &yEnd){
     

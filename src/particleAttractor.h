@@ -22,23 +22,16 @@ class ParticleAttractor {
     
     float particleDistanceOff(double particlePosX, double particlePosY);
     float angleBetweenAngles(float angleA, float angleB, bool clockwise);
-    
-    bool type;
-    
-    
-    int count;
+
 	
 public:
     ofColor color;
     
-    ParticleAttractor(int posX, int posY, float range, ofColor color, bool fixedPoint, int max); //constructor (void)
+    ParticleAttractor(int posX, int posY, float range, ofColor color); //constructor (void)
     
     int posX;
     int posY;
     float range;
-    
-    bool fixedPoint;
-    int max;
 
     int influenceMagnitude;
     

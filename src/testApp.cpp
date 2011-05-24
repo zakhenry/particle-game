@@ -8,9 +8,9 @@
 
 ofColor tmp;
 
-ParticleAttractor attractorCursor(-100, -100, 100, tmp, false, -1);
+ParticleAttractor attractorCursor(-100, -100, 100, tmp);
 ParticleEmitter emitterCursor(-100, -100, 0, 3, tmp);
-ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, false, tmp); //colors wont work yet
+ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, tmp); //colors wont work yet
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -74,7 +74,7 @@ void testApp::setup(){
     emitterCursor.color = green;
     obstacleCursor.color = blue;
     
-    ParticleAttractor newAttractor(-100, -100, 100, cyan, false, -1);
+    ParticleAttractor newAttractor(-100, -100, 100, cyan);
     for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
@@ -85,7 +85,7 @@ void testApp::setup(){
     ParticleEmitter anotherEmitter(100, 500, 0, 3, cyan);
     emitters.push_back(anotherEmitter);
     
-    ParticleObstacle newObstacle(ofRectangle(300, 450, 200, 100), -45, false, green);
+    ParticleObstacle newObstacle(ofRectangle(300, 450, 200, 100), -45, green);
     obstacles.push_back(newObstacle);
     
     
@@ -207,23 +207,29 @@ void testApp::draw(){
         
     }
     
-    
-    
     for (int i=0; i<emitters.size(); i++){
         emitters[i].draw(GL3D);
     }
     
-    for (int i=0; i<attractors.size(); i++){
-        attractors[i].draw(GL3D);
+    for (int i=0; i<obstacles.size(); i++){
+        obstacles[i].draw(GL3D);
     }
     
     for (int i=0; i<fixedAttractors.size(); i++){
         fixedAttractors[i].draw(GL3D);
     }
     
-    for (int i=0; i<obstacles.size(); i++){
-        obstacles[i].draw(GL3D);
+    for (int i=0; i<attractors.size(); i++){
+        attractors[i].draw(GL3D);
     }
+    
+    
+    
+    
+    
+    
+    
+    
     
     if (buildMode){
         switch (currentBuildItem) {
@@ -427,7 +433,7 @@ void testApp::mousePressed(int x, int y, int button){
             case 2: //right click
             {
                 if (currentBuildItem==attractor){
-                    ParticleAttractor newUserAttractor(x, y, attractorCursor.range, cyan, true, -1);
+                    ParticleAttractor newUserAttractor(x, y, attractorCursor.range, cyan);
                     attractors.push_back(newUserAttractor);
                 }
                 
@@ -560,12 +566,7 @@ void testApp::removedTouch(int & r) {
 //    cout << "------ a removed touch"<<r<<"\n";
     
     currentTouchScale = 0;
-    
-    if (!buildMode){
-        
-//        touches.erase(touches.end()); //pop the last element off 
-//        attractors.erase(attractors.end()); //pop the last element off 
-    }
+
 }
 
 float testApp::distanceBetweenTouches(MTouch t1, MTouch t2){
@@ -578,7 +579,7 @@ void testApp::clearLevel(){
     emitters.erase(emitters.begin(), emitters.end());
     obstacles.erase(obstacles.begin(), obstacles.end());
     
-    ParticleAttractor newAttractor(-100, -100, 100, cyan, false, -1); //attractor for the trackpad to access
+    ParticleAttractor newAttractor(-100, -100, 100, cyan); //attractor for the trackpad to access
     for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
