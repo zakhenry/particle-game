@@ -11,17 +11,26 @@
 // than once which would confuse the compiler
 
 #include "ofMain.h"
-
+#include "ofxXmlSettings.h"
+#include "particleAttractor.h"
+#include "particleEmitter.h"
+#include "particleObstacle.h"
 
 class LevelHandler {
 	
 	//private
+    ofxXmlSettings xml;
+    vector<string>levels;
+    ofColor red, green, blue;
     
 public:
     
     LevelHandler(); //constructor
     
-//    void updatePosition(int newX, int newY);
+    bool saveLevel(string name, vector<ParticleAttractor>attractors, vector<ParticleEmitter>emitters, vector<ParticleObstacle>obstacles); //set item positions
+    bool loadLevel(string name, vector<ParticleAttractor>&attractors, vector<ParticleEmitter>&emitters, vector<ParticleObstacle>&obstacles); //get item positions
+//    void clearLevel();
+    int listLevels(string dir, vector<string> &files);
     
 };
 

@@ -4,7 +4,12 @@
 
 #include "ofMain.h"
 #include "ofxMultiTouchPad.h"
-#include "ofxXmlSettings.h"
+#include "ofxXmlSettings.h" //not needed soon ##
+#include "particle.h"
+#include "particleAttractor.h"
+#include "particleEmitter.h"
+#include "particleObstacle.h"
+#include "levelHandler.h"
 
 class testApp : public ofBaseApp{
 	
@@ -22,9 +27,7 @@ public:
     void mouseReleased(int x, int y, int button);
     void windowResized(int w, int h);
     
-    bool saveLevel(string name);
-    bool loadLevel(string name);
-    void clearLevel();
+    
     
     float 	counter;
     bool	bSmooth;
@@ -35,12 +38,31 @@ public:
     
     float distanceBetweenTouches(MTouch t1, MTouch t2);
     
-    int listLevels(string dir, vector<string> &files);
+    void clearLevel();
     
-//private:
+    vector<Particle>particles;
+    vector<ParticleAttractor>attractors;
+    vector<ParticleAttractor>fixedAttractors;
+    vector<ParticleEmitter>emitters;
+    vector<ParticleObstacle>obstacles;
+    
+    ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
+    
+    vector<ofPoint>touches2;
+    vector<MTouch> touches;
+    
+    
+    
+    
+    
+
     ofxMultiTouchPad pad;
     
-    ofxXmlSettings xml;
+    ofxXmlSettings xml; //to remove soon ##
+    
+    LevelHandler levelHandler;
+    
+    //private:
     
     
 };

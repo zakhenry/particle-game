@@ -1,26 +1,16 @@
 #include "testApp.h"
-#include "particle.h"
-#include "particleAttractor.h"
-#include "particleEmitter.h"
-#include "particleObstacle.h"
+
 #define OF_ADDON_USING_OFXXMLSETTINGS //dunno why this is necessary, but meh, ofwiki told me to
 
-vector<Particle>particles;
-vector<ParticleAttractor>attractors;
-vector<ParticleAttractor>fixedAttractors;
-vector<ParticleEmitter>emitters;
-vector<ParticleObstacle>obstacles;
 
-vector<ofPoint>touches2;
-vector<MTouch> touches;
-
-ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
 
 //build cursors
 
-ParticleAttractor attractorCursor(-100, -100, 100, red, false, -1);
-ParticleEmitter emitterCursor(-100, -100, 0, 3, red);
-ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, false, red); //colors wont work yet
+ofColor tmp;
+
+ParticleAttractor attractorCursor(-100, -100, 100, tmp, false, -1);
+ParticleEmitter emitterCursor(-100, -100, 0, 3, tmp);
+ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, false, tmp); //colors wont work yet
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -101,8 +91,7 @@ void testApp::setup(){
     
     currentBuildItem = attractor;
     
-    vector<string>files;
-    listLevels("../../../data", files);
+    
      
 }
 
@@ -283,7 +272,7 @@ void testApp::keyPressed  (int key){
         if (key == 13){ //enter (endl)
             //go through save routine
             
-            saveLevel(saveString);
+            levelHandler.saveLevel(saveString, fixedAttractors, emitters, obstacles);
             
             cout << "save string is \""<<saveString<<"\"\n";
             
@@ -334,7 +323,8 @@ void testApp::keyPressed  (int key){
                 break;
                 
             case 'l': //load
-                loadLevel("savegame");
+                clearLevel(); //stops overwriting the points
+                levelHandler.loadLevel("savegame", fixedAttractors, emitters, obstacles);
                 break;
                 
             case 'a': //attractor mode
@@ -582,99 +572,6 @@ float testApp::distanceBetweenTouches(MTouch t1, MTouch t2){
     return powf((pow(t1.x-t2.x, 2)+pow(t1.y-t2.y, 2)), 0.5);
 }
 
-bool testApp::saveLevel(string name){
-//    xml.clear(); //bump loaded data out of the xml object (later could have progress save options by omitting this?)
-    
-    xml.addTag("attractors");
-        xml.pushTag("attractors");
-            for (int i=0; i<fixedAttractors.size(); i++){
-                xml.addTag("attractor");
-                xml.pushTag("attractor", xml.getNumTags("attractor")-1); //push last tag (the one just added)
-                    xml.addValue("x",fixedAttractors[i].posX);
-                    xml.addValue("y",fixedAttractors[i].posY);
-                    xml.addValue("range",fixedAttractors[i].range);
-                xml.popTag();
-            }
-        xml.popTag();
-    
-    xml.addTag("emitters");
-        xml.pushTag("emitters");
-        for (int i=0; i<emitters.size(); i++){
-            xml.addTag("emitter");
-            xml.pushTag("emitter", xml.getNumTags("emitter")-1); //push last tag (the one just added)
-            xml.addValue("x",emitters[i].posX);
-            xml.addValue("y",emitters[i].posY);
-            xml.addValue("angle",emitters[i].streamAngle);
-            xml.addValue("speed",emitters[i].particleSpeed);
-            xml.popTag();
-        }
-        xml.popTag();
-    
-    xml.addTag("obstacles");
-        xml.pushTag("obstacles");
-        for (int i=0; i<obstacles.size(); i++){
-            xml.addTag("obstacle");
-            xml.pushTag("obstacle", xml.getNumTags("obstacle")-1); //push last tag (the one just added)
-            xml.addValue("x",obstacles[i].rectangle.x);
-            xml.addValue("y",obstacles[i].rectangle.y);
-            xml.addValue("width",obstacles[i].rectangle.width);
-            xml.addValue("height",obstacles[i].rectangle.height);
-            xml.addValue("rotation",obstacles[i].rotation);
-            xml.popTag();
-        }
-        xml.popTag();
-    
-    
-    
-    xml.saveFile(name+".sol");
-    
-    return true; //possibly will be some condition later that means save could fail
-}
-
-bool testApp::loadLevel(string name){
-    clearLevel();
-    xml.clear();
-    if (!xml.loadFile(name+".sol")){
-        cout << "The level \""<<name<<".sol\" could not be found\n";
-        return false; //
-    }
-    
-    string xmlDump;
-    xml.copyXmlToString(xmlDump);
-    
-    cout <<"loaded string gives: "<<xmlDump<<"\n";
-    
-    xml.pushTag("attractors");
-    for (int i=0; i<xml.getNumTags("attractor"); i++){
-        xml.pushTag("attractor", i);
-        ParticleAttractor newFixedAttractor(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("range", 0.0), red, true, 100);
-        fixedAttractors.push_back(newFixedAttractor);
-//        cout << "posX is: "<<newFixedAttractor.posX<<", posY is: "<<newFixedAttractor.posY<<", range is: "<<newFixedAttractor.range<<"\n";
-        xml.popTag();
-    }
-    xml.popTag();
-    
-    xml.pushTag("emitters");
-    for (int i=0; i<xml.getNumTags("emitter"); i++){
-        xml.pushTag("emitter", i);
-        ParticleEmitter newEmitter(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("angle", 0), xml.getValue("speed", 0), green); //int posX, int posY, float angle, float particleSpeed, ofColor color
-        emitters.push_back(newEmitter);
-        xml.popTag();
-    }
-    xml.popTag();
-    
-    xml.pushTag("obstacles");
-    for (int i=0; i<xml.getNumTags("obstacle"); i++){
-        xml.pushTag("obstacle", i);
-        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), false, blue); //ofRectangle rectangle, float rotation, bool reflect, ofColor color
-        obstacles.push_back(newObstacle);
-        xml.popTag();
-    }
-    xml.popTag();
-    
-    return true;
-}
-
 void testApp::clearLevel(){
     attractors.erase(attractors.begin(), attractors.begin()+attractors.size());
     fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
@@ -685,29 +582,4 @@ void testApp::clearLevel(){
     for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
-}
-
-int testApp::listLevels(string dir, vector<string> &levels){
-
-        vector<string>files;
-    
-        DIR *dp;
-        struct dirent *dirp;
-        if((dp  = opendir(dir.c_str())) == NULL) {
-            cout << "Error(" << errno << ") opening " << dir << endl;
-            return errno;
-        }
-        
-        while ((dirp = readdir(dp)) != NULL) {
-            files.push_back(string(dirp->d_name));
-        }
-        closedir(dp);
-          
-        string fileext = ".sol";
-        for (int i=0; i<files.size(); i++){
-            if (files[i].find(fileext)!=string::npos){ //if string is found
-                levels.push_back(files[i]);
-            }
-        }
-        return 0;
 }
