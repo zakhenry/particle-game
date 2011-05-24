@@ -40,14 +40,19 @@ void ParticleObstacle::setNewParticleVelocity(Particle& particle, bool reflect){
     
     if (reflect){
         //work some reflection magic
+        
     }else{
         particle.destroy = true; // 'absorb' the particle
     }
     
 }
 
-int ParticleObstacle::updatePosDim(ofRectangle newRect, float newRotation){
+int ParticleObstacle::updatePosDim(ofRectangle newRect){
     rectangle = newRect;
+    return 0;
+}
+
+int ParticleObstacle::updateRotation(float newRotation){
     rotation = newRotation;
     return 0;
 }
@@ -66,6 +71,7 @@ int ParticleObstacle::draw(bool GL3D){
         ofFill();		// draw "filled shapes"
         ofSetRectMode(OF_RECTMODE_CENTER);
         ofRect(0, 0, rectangle.width, rectangle.height);
+        ofSetRectMode(OF_RECTMODE_CORNER); //go back to normal mode
         ofPopMatrix();
     }
     

@@ -26,9 +26,9 @@ Particle::Particle(float newX, float newY, float newSpeed, float newDirection, o
 void Particle::update(){
     
     if (direction>180){
-        direction = -180;
+        direction = -360+direction;
     }else if (direction<(-180)){
-        direction = 180;
+        direction = 360+direction;
     }
     
 //    cout << "angle of particle is: " << direction << "\n";

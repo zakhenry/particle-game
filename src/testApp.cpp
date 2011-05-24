@@ -14,6 +14,14 @@ vector<ParticleObstacle>obstacles;
 vector<ofPoint>touches2;
 vector<MTouch> touches;
 
+ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
+
+//build cursors
+
+ParticleAttractor attractorCursor(-100, -100, 100, cyan, false, -1);
+ParticleEmitter emitterCursor(-100, -100, 0, 3, cyan);
+ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, false, green);
+
 int emitterX, emitterY;
 float currentTouchScale = 0;
 float cameraVerticalAngle, current3TouchHeight = 0;
@@ -22,10 +30,12 @@ bool alphaTrail = true, GL3D = false;
 
 bool fixedPoint = false;
 bool buildMode = false; //allows build and setup
+enum buildItem {emitter, attractor, obstacle} currentBuildItem;
+
 bool saving = false; //when saving is true the key input functions are locked down
 string saveString;
 
-ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
+
 
 
 //--------------------------------------------------------------
@@ -85,6 +95,8 @@ void testApp::setup(){
     obstacles.push_back(newObstacle);
     
     
+    currentBuildItem = attractor;
+    
     //some model / light stuff
    // glEnable (GL_DEPTH_TEST);
     //glShadeModel (GL_SMOOTH);
@@ -96,17 +108,45 @@ void testApp::update(){
         
     ofSetBackgroundAuto(!alphaTrail);
     
-    if (attractors.size()>0&&buildMode){
-        attractors[0].updatePos(mouseX, mouseY); //move the first emitter with the mouse
-    }
-    
     vector<ParticleAttractor>allAttractors; //concat vectors
+    
     allAttractors.insert(allAttractors.end(), attractors.begin(), attractors.end());
     allAttractors.insert(allAttractors.end(), fixedAttractors.begin(), fixedAttractors.end());
     
+    vector<ParticleObstacle>allObstacles; //concat vectors
+    allObstacles.insert(allObstacles.end(), obstacles.begin(), obstacles.end()); //chuck existing obstacles into temp vector
+    
+    if (buildMode){
+        
+        switch (currentBuildItem) {
+            case attractor:
+                //do something
+                attractorCursor.updatePos(mouseX, mouseY);
+                allAttractors.insert(allAttractors.end(), attractorCursor);
+                break;
+                
+            case emitter:
+                //do something
+                emitterCursor.updatePosition(mouseX, mouseY);
+                emitterCursor.update(allAttractors, obstacles);
+                break;
+                
+            case obstacle:
+                //do something
+                obstacleCursor.updatePosDim(ofRectangle(mouseX, mouseY, obstacleCursor.rectangle.width, obstacleCursor.rectangle.height));
+                
+                allObstacles.insert(allObstacles.end(), obstacleCursor); //memory leak?
+
+                break;
+                
+            default:
+                break;
+        }
+                    
+    }
+    
     for (int i=0; i<emitters.size(); i++){
-        emitters[i].update(allAttractors, obstacles); //update every emitter (and in turn every particle will be updated, so the attractors will work)
-//        emitters[i].update(fixedAttractors); //update every emitter (and in turn every particle will be updated, so the fixed attractors will work)
+        emitters[i].update(allAttractors, allObstacles); //update every emitter (and in turn every particle will be updated, so the attractors will work)
     }
     
     if (pad.getTouchCount()>0&&!buildMode){
@@ -175,9 +215,7 @@ void testApp::draw(){
         
     }
     
-    for (int i=0; i<obstacles.size(); i++){
-        obstacles[i].draw(GL3D);
-    }
+    
     
     for (int i=0; i<emitters.size(); i++){
         emitters[i].draw(GL3D);
@@ -189,6 +227,32 @@ void testApp::draw(){
     
     for (int i=0; i<fixedAttractors.size(); i++){
         fixedAttractors[i].draw(GL3D);
+    }
+    
+    for (int i=0; i<obstacles.size(); i++){
+        obstacles[i].draw(GL3D);
+    }
+    
+    if (buildMode){
+        switch (currentBuildItem) {
+            case attractor:
+                //do something
+                attractorCursor.draw(GL3D);
+                break;
+                
+            case emitter:
+                //do something
+                emitterCursor.draw(GL3D);
+                break;
+                
+            case obstacle:
+                //do something
+                obstacleCursor.draw(GL3D);
+                break;
+                
+            default:
+                break;
+        }
     }
     
     
@@ -232,8 +296,8 @@ void testApp::keyPressed  (int key){
     }else{
         switch (key) {
                 
-            case 'a':
-                alphaTrail = !alphaTrail; //toggle alpha trail
+            case 'b':
+                alphaTrail = !alphaTrail; //toggle alpha blending
                 break;
                 
             case '3':
@@ -265,6 +329,45 @@ void testApp::keyPressed  (int key){
                 loadLevel("new file");
                 break;
                 
+            case 'a': //attractor mode
+                currentBuildItem = attractor;
+                break;
+                
+            case 'e': //emitter mode
+                currentBuildItem = emitter;
+                break;
+                
+            case 'o': //obstacle mode
+                currentBuildItem = obstacle;
+                break;
+                
+                
+            case 32: //space
+            {
+                switch (currentBuildItem) {
+                    case attractor:
+                        //do something
+                        cout << "placed an attractor\n";
+                        break;
+                        
+                    case emitter:
+                        //do something
+                        cout << "placed an emitter\n";
+                        break;
+                        
+                    case obstacle:
+                        //do something
+                        cout << "placed an obstacle\n";
+                        break;
+                        
+                    default:
+                        break;
+                }
+            }
+            break;
+                
+            
+                
                 
                 
             default:
@@ -294,7 +397,7 @@ void testApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
     
-    if (buildMode){
+    if (buildMode&&currentBuildItem==attractor){
         switch (button){
             case 0: //left click?
             {
@@ -337,9 +440,9 @@ void testApp::padUpdates(int & touchCount) {
             if (pad.getTouchAt(0,&t1) && pad.getTouchAt(1,&t2) ){
                 float newTouchScale = distanceBetweenTouches(t1, t2);
                 if (newTouchScale>currentTouchScale){
-                    attractors[0].range += 0.5;
+                    attractorCursor.range += 0.5;
                 }else{
-                    attractors[0].range -= 0.5;
+                    attractorCursor.range -= 0.5;
                 }
                 currentTouchScale = distanceBetweenTouches(t1, t2);
                 //            cout << "Distance between two fingers is: "<<distanceBetweenTouches(t1, t2)<<"\n";
