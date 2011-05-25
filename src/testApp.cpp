@@ -11,6 +11,7 @@ ofColor tmp;
 ParticleAttractor attractorCursor(-100, -100, 100, tmp);
 ParticleEmitter emitterCursor(-100, -100, 0, 3, tmp);
 ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, tmp); //colors wont work yet
+ParticleTarget targetCursor(-100, -100, 50, tmp);
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -97,6 +98,9 @@ void testApp::setup(){
 
 //--------------------------------------------------------------
 void testApp::update(){
+    
+    
+    reciever.listen();
         
     ofSetBackgroundAuto(!alphaTrail);
     

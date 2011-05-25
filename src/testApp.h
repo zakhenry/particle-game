@@ -9,6 +9,8 @@
 #include "particleEmitter.h"
 #include "particleObstacle.h"
 #include "levelHandler.h"
+#include "particleTarget.h"
+#include "oscClient.h"
 
 class testApp : public ofBaseApp{
 	
@@ -44,6 +46,7 @@ public:
     vector<ParticleAttractor>fixedAttractors;
     vector<ParticleEmitter>emitters;
     vector<ParticleObstacle>obstacles;
+    vector<ParticleTarget>targets;
     
     ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
     
@@ -53,7 +56,7 @@ public:
     
     
     
-    
+    oscClient reciever;
 
     ofxMultiTouchPad pad;
     
