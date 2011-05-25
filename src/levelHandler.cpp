@@ -29,11 +29,13 @@ LevelHandler::LevelHandler(){ //stream constructor
     red.r = 255;
     green.g = 255;
     blue.b = 255;
+    magenta = red;
+    magenta.b = 255;
     
     
 }
 
-bool LevelHandler::saveLevel(string name, vector<ParticleAttractor>attractors, vector<ParticleEmitter>emitters, vector<ParticleObstacle>obstacles){
+bool LevelHandler::saveLevel(string name, vector<ParticleAttractor>attractors, vector<ParticleEmitter>emitters, vector<ParticleObstacle>obstacles, vector<ParticleTarget>targets){
     //    xml.clear(); //bump loaded data out of the xml object (later could have progress save options by omitting this?)
     
     xml.addTag("attractors");
@@ -75,6 +77,18 @@ bool LevelHandler::saveLevel(string name, vector<ParticleAttractor>attractors, v
     }
     xml.popTag();
     
+    xml.addTag("targets");
+    xml.pushTag("targets");
+    for (int i=0; i<targets.size(); i++){
+        xml.addTag("target");
+        xml.pushTag("target", xml.getNumTags("target")-1); //push last tag (the one just added)
+        xml.addValue("x",targets[i].posX);
+        xml.addValue("y",targets[i].posY);
+        xml.addValue("radius",targets[i].radius);
+        xml.popTag();
+    }
+    xml.popTag();
+    
     
     
     xml.saveFile(name+".sol");
@@ -82,7 +96,7 @@ bool LevelHandler::saveLevel(string name, vector<ParticleAttractor>attractors, v
     return true; //possibly will be some condition later that means save could fail
 }
 
-bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, vector<ParticleEmitter>&emitters, vector<ParticleObstacle>&obstacles){
+bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, vector<ParticleEmitter>&emitters, vector<ParticleObstacle>&obstacles, vector<ParticleTarget>&targets){
     xml.clear();
     if (!xml.loadFile(name+".sol")){
         cout << "The level \""<<name<<".sol\" could not be found\n";
@@ -107,7 +121,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("emitters");
     for (int i=0; i<xml.getNumTags("emitter"); i++){
         xml.pushTag("emitter", i);
-        ParticleEmitter newEmitter(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("angle", 0), xml.getValue("speed", 0), green); //int posX, int posY, float angle, float particleSpeed, ofColor color
+        ParticleEmitter newEmitter(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("angle", 0), xml.getValue("speed", 0.0), green); //int posX, int posY, float angle, float particleSpeed, ofColor color
         emitters.push_back(newEmitter);
         xml.popTag();
     }
@@ -116,8 +130,17 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("obstacles");
     for (int i=0; i<xml.getNumTags("obstacle"); i++){
         xml.pushTag("obstacle", i);
-        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), blue); //## for now fixed to normal type
+        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), blue); 
         obstacles.push_back(newObstacle);
+        xml.popTag();
+    }
+    xml.popTag();
+    
+    xml.pushTag("targets");
+    for (int i=0; i<xml.getNumTags("target"); i++){
+        xml.pushTag("target", i);
+        ParticleTarget newTarget(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("radius", 0), magenta); //int posX, int posY, int radius, ofColor color
+        targets.push_back(newTarget);
         xml.popTag();
     }
     xml.popTag();

@@ -30,6 +30,7 @@
 		6CC1970B138C834700A96D01 /* ofxOscReceiver.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CC196FB138C834600A96D01 /* ofxOscReceiver.cpp */; };
 		6CC1970C138C834700A96D01 /* ofxOscSender.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CC196FD138C834600A96D01 /* ofxOscSender.cpp */; };
 		6CC1970F138C835300A96D01 /* oscClient.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CC1970D138C835300A96D01 /* oscClient.cpp */; };
+		6CC19712138CA2C400A96D01 /* noise.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6CC19710138CA2C300A96D01 /* noise.cpp */; };
 		E45BE0AA0E8CC67C009D7055 /* GLee.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE0A90E8CC67C009D7055 /* GLee.a */; };
 		E45BE2E40E8CC69C009D7055 /* rtAudio.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE2E30E8CC69C009D7055 /* rtAudio.a */; };
 		E45BE97B0E8CC7DD009D7055 /* AGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E45BE9710E8CC7DD009D7055 /* AGL.framework */; };
@@ -156,6 +157,8 @@
 		6CC196FE138C834600A96D01 /* ofxOscSender.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxOscSender.h; sourceTree = "<group>"; };
 		6CC1970D138C835300A96D01 /* oscClient.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = oscClient.cpp; sourceTree = "<group>"; };
 		6CC1970E138C835300A96D01 /* oscClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = oscClient.h; sourceTree = "<group>"; };
+		6CC19710138CA2C300A96D01 /* noise.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = noise.cpp; sourceTree = "<group>"; };
+		6CC19711138CA2C400A96D01 /* noise.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = noise.h; sourceTree = "<group>"; };
 		E45BE0390E8CC647009D7055 /* FreeImage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FreeImage.h; path = ../../../libs/freeimage/include/FreeImage.h; sourceTree = SOURCE_ROOT; };
 		E45BE03F0E8CC650009D7055 /* fmod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fmod.h; path = ../../../libs/fmodex/include/fmod.h; sourceTree = SOURCE_ROOT; };
 		E45BE0400E8CC650009D7055 /* fmod.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; name = fmod.hpp; path = ../../../libs/fmodex/include/fmod.hpp; sourceTree = SOURCE_ROOT; };
@@ -634,6 +637,8 @@
 				6CC196C7138C7C2A00A96D01 /* particleTarget.cpp */,
 				6C46A64A136F798300DFCF18 /* particle.h */,
 				6C46A64B136F798C00DFCF18 /* particle.cpp */,
+				6CC19711138CA2C400A96D01 /* noise.h */,
+				6CC19710138CA2C300A96D01 /* noise.cpp */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;
@@ -821,6 +826,7 @@
 				6CC1970B138C834700A96D01 /* ofxOscReceiver.cpp in Sources */,
 				6CC1970C138C834700A96D01 /* ofxOscSender.cpp in Sources */,
 				6CC1970F138C835300A96D01 /* oscClient.cpp in Sources */,
+				6CC19712138CA2C400A96D01 /* noise.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

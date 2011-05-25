@@ -16,19 +16,21 @@ ParticleTarget::ParticleTarget(int newX, int newY, int newRadius, ofColor newCol
     posY = newY;
     radius = newRadius;
     color = newColor;
+    
 }
 
 
 int ParticleTarget::influenceParticles(vector<Particle>& particles){
     
-        cout << "target is influencing "<<fixedParticles.size()<<" particles \n"; 
+//        cout << "target is influencing "<<fixedParticles.size()<<" particles \n"; 
     
     for (int i=0; i<particles.size(); i++){
         
         if (particleInRange(particles[i].posX, particles[i].posY)){
             //            cout << "particle is inside obstacle\n";
-            particles[i].destroy = true;
             fixedParticles.push_back(particles[i]);
+            particles[i].destroy = true;
+            
         }
     }
     
@@ -41,33 +43,45 @@ int ParticleTarget::updatePos(int newX, int newY){
     return 0;
 }
 
-int ParticleTarget::draw(bool GL3D){
+int ParticleTarget::draw(bool GL3D, float&sweep){
     ofSetColor(color.r, color.g, color.b);
     
     ofFill();		// draw "filled shapes"
     ofCircle(posX, posY, radius);
     
-        /*if (counter){
-         ofBeginShape();
-         int resolution = 100;
-         float sweep = trappedParticles.size()/particleMax; //0 to 1
-         //            cout <<"particle count: "<<trappedParticles.size()<<" max:"<<particleMax<<"\n";
-         if (sweep>1){
+    if (fixedParticles.size()>0){
+        for (int i=0; i<fixedParticles.size(); i++){
+            ofCircle(fixedParticles[i].posX, fixedParticles[i].posY, 10);
+        }
+    }
+    
+
+    ofSetColor(0, 0, 0);
+    
+    ofPushMatrix();
+    
+    ofTranslate(posX, posY);
+    
+     ofBeginShape();
+     int resolution = 100;
+     sweep = (float)fixedParticles.size()/2000; //0 to 1
+     cout <<"particle count: "<<sweep<<"\n";
+     if (sweep>1){
          sweep = 1;
-         color.g = 255;
-         }
-         float radius1 = min(rectangle.width, rectangle.height)/2-10;
-         float radius2 = radius1-10;
-         for(int i = 0; i <= resolution; i++) { 
-         float angle = i*sweep*2*PI/resolution; 
-         ofVertex((cos(angle) * radius1), (sin(angle) * radius1));
-         }
-         for(int i = resolution+1; i != 0; i--) { 
-         float angle = i*sweep*2*PI/resolution; 
-         ofVertex((cos(angle) * radius2), (sin(angle) * radius2));
-         }
-         ofEndShape();
-         }*/
+     }
+     float radius1 = radius-10;
+     float radius2 = radius1-10;
+     for(int i = 0; i <= resolution; i++) { 
+     float angle = i*sweep*2*PI/resolution; 
+     ofVertex((cos(angle) * radius1), (sin(angle) * radius1));
+     }
+     for(int i = resolution+1; i != 0; i--) { 
+     float angle = i*sweep*2*PI/resolution; 
+     ofVertex((cos(angle) * radius2), (sin(angle) * radius2));
+     }
+     ofEndShape();
+    
+    ofPopMatrix();
     
     
     

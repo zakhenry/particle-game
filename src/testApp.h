@@ -11,6 +11,7 @@
 #include "levelHandler.h"
 #include "particleTarget.h"
 #include "oscClient.h"
+#include "noise.h"
 
 class testApp : public ofBaseApp{
 	
@@ -53,7 +54,7 @@ public:
     vector<ofPoint>touches2;
     vector<MTouch> touches;
     
-    
+    ofSoundPlayer beat;
     
     
     oscClient reciever;

@@ -26,11 +26,14 @@ class ParticleTarget {
     
     vector<Particle>fixedParticles;
     
-    int posX, posY;
+    
     
 public:
     
+    int posX, posY;
     float radius;
+    
+    bool full;
     
     ofColor color;
     ParticleTarget(int posX, int posY, int radius, ofColor color); //constructor (void)
@@ -38,8 +41,10 @@ public:
     
     int influenceParticles(vector<Particle>& particles);
     
+    ofSoundPlayer beat;
     
-	int draw(bool GL3D);
+    
+	int draw(bool GL3D, float &target);
     int updatePos(int posX, int posY);
 	
 	

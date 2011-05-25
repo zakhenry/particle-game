@@ -22,6 +22,8 @@ bool alphaTrail = true, GL3D = false;
 bool buildMode = false; //allows build and setup
 bool kinectMode = false;
 
+bool targetPlaced = false;
+
 enum buildItem {emitter, attractor, obstacle, target} currentBuildItem;
 
 bool saving = false; //when saving is true the key input functions are locked down
@@ -37,6 +39,13 @@ void testApp::setup(){
 	ofSetWindowTitle("graphics example");
     
     ofHideCursor();
+    
+    
+    
+    beat.loadSound("sounds/electric.wav");
+    beat.setLoop(true);
+    beat.setSpeed(0.1);
+    beat.play();
     
     
     
@@ -155,7 +164,7 @@ void testApp::update(){
     }
     
     for (int i=0; i<emitters.size(); i++){
-        emitters[i].update(allAttractors, allObstacles, allTargets); //update every emitter (and in turn every particle will be updated, so the attractors will work)
+        emitters[i].update(allAttractors, allObstacles, targets); //update every emitter (and in turn every particle will be updated, so the attractors will work)
     }
     
     if (kinectMode){
@@ -254,8 +263,11 @@ void testApp::draw(){
         fixedAttractors[i].draw(GL3D);
     }
     
-    for (int i=0; i<targets.size(); i++){
-        targets[i].draw(GL3D);
+    for (int i=0; i<targets.size(); i++){ //should only go once
+        float completed;
+        
+        targets[i].draw(GL3D, completed);
+        beat.setSpeed(completed);
     }
     
     for (int i=0; i<attractors.size(); i++){
@@ -289,7 +301,8 @@ void testApp::draw(){
                 
             case target:
                 //do something
-                targetCursor.draw(GL3D);
+                float nothing;
+                targetCursor.draw(GL3D, nothing);
                 break;
                 
             default:
@@ -322,7 +335,7 @@ void testApp::keyPressed  (int key){
         if (key == 13){ //enter (endl)
             //go through save routine
             
-            levelHandler.saveLevel(saveString, fixedAttractors, emitters, obstacles);
+            levelHandler.saveLevel(saveString, fixedAttractors, emitters, obstacles, targets);
             
             cout << "save string is \""<<saveString<<"\"\n";
             
@@ -370,7 +383,7 @@ void testApp::keyPressed  (int key){
                 
             case 'l': //load
                 clearLevel(); //stops overwriting the points
-                levelHandler.loadLevel("savegame", fixedAttractors, emitters, obstacles);
+                levelHandler.loadLevel("savegame", fixedAttractors, emitters, obstacles, targets);
                 break;
                 
             case 'a': //attractor mode
@@ -414,6 +427,15 @@ void testApp::keyPressed  (int key){
                             obstacles.erase(obstacles.end());
                         }
                         break;
+                        
+                    case target:
+                        if (targets.size()!=0){
+                            targets.erase(targets.end());
+                            targetPlaced = false;
+                        }
+                        break;
+                        
+                        
                         
                     default:
                         break;
@@ -472,7 +494,10 @@ void testApp::mousePressed(int x, int y, int button){
                         break;
                         
                     case target:
-                        targets.push_back(targetCursor);
+                        if (!targetPlaced){
+                            targets.push_back(targetCursor);
+                        }
+                        targetPlaced = true;
                         break;
                         
                     default:
@@ -635,6 +660,7 @@ void testApp::clearLevel(){
     fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
     emitters.erase(emitters.begin(), emitters.end());
     obstacles.erase(obstacles.begin(), obstacles.end());
+    targets.erase(targets.begin(), targets.end());
     
     /*ParticleAttractor newAttractor(-100, -100, 100, cyan); //attractor for the trackpad to access
     for (int i=0; i<5; i++){ //maybe to delete

@@ -21,14 +21,14 @@ class LevelHandler {
 	//private
     ofxXmlSettings xml;
     vector<string>levels;
-    ofColor red, green, blue;
+    ofColor red, green, blue, magenta;
     
 public:
     
     LevelHandler(); //constructor
     
-    bool saveLevel(string name, vector<ParticleAttractor>attractors, vector<ParticleEmitter>emitters, vector<ParticleObstacle>obstacles); //set item positions
-    bool loadLevel(string name, vector<ParticleAttractor>&attractors, vector<ParticleEmitter>&emitters, vector<ParticleObstacle>&obstacles); //get item positions
+    bool saveLevel(string name, vector<ParticleAttractor>attractors, vector<ParticleEmitter>emitters, vector<ParticleObstacle>obstacles, vector<ParticleTarget>targets); //set item positions
+    bool loadLevel(string name, vector<ParticleAttractor>&attractors, vector<ParticleEmitter>&emitters, vector<ParticleObstacle>&obstacles, vector<ParticleTarget>&targets); //get item positions
 //    void clearLevel();
     int listLevels(string dir, vector<string> &files);
     
