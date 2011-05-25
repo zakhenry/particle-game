@@ -19,8 +19,9 @@ float cameraVerticalAngle, current3TouchHeight = 0;
 
 bool alphaTrail = true, GL3D = false;
 
-bool fixedPoint = false;
 bool buildMode = false; //allows build and setup
+bool kinectMode = false;
+
 enum buildItem {emitter, attractor, obstacle} currentBuildItem;
 
 bool saving = false; //when saving is true the key input functions are locked down
@@ -76,7 +77,7 @@ void testApp::setup(){
     obstacleCursor.color = blue;
     
     ParticleAttractor newAttractor(-100, -100, 100, cyan);
-    for (int i=0; i<5; i++){ //maybe to delete
+    for (int i=0; i<2; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
     
@@ -100,7 +101,7 @@ void testApp::setup(){
 void testApp::update(){
     
     
-    reciever.listen();
+    
         
     ofSetBackgroundAuto(!alphaTrail);
     
@@ -145,20 +146,38 @@ void testApp::update(){
         emitters[i].update(allAttractors, allObstacles); //update every emitter (and in turn every particle will be updated, so the attractors will work)
     }
     
-    if (pad.getTouchCount()>0&&!buildMode){
+    if (kinectMode){
         
-        pad.getTouchesAsOfPoints(touches2); //function already cleans up the touches vector
+        vector<ofPoint>kinectPoints;
         
-        for (int i=0; i<pad.getTouchCount(); i++){
-            attractors[i].updatePos(touches2[i].x*ofGetWidth(), touches2[i].y*ofGetHeight());
+        kinectPoints = reciever.listen();
+        
+        if (kinectPoints.size()>0){
+            for (int i=0; i<kinectPoints.size(); i++){
+                attractors[i].updatePos(kinectPoints[i].x, kinectPoints[i].y);
+//                cout << "x: "<<kinectPoints[i].x<<"y:"<<kinectPoints[i].y<<"\n";
+            }
+        }
+        
+        
+    }else{
+        if (pad.getTouchCount()>0&&!buildMode){
+            
+            pad.getTouchesAsOfPoints(touches2); //function already cleans up the touches vector
+            
+            for (int i=0; i<pad.getTouchCount(); i++){
+                attractors[i].updatePos(touches2[i].x*ofGetWidth(), touches2[i].y*ofGetHeight());
+            }
         }
     }
     
     
     
+    
+    
 //    cout << "there is "<<attractors.size()<<" attractors on the pad\n";
     
-    ofSetWindowTitle(ofToString(ofGetFrameRate()));
+//    ofSetWindowTitle(ofToString(ofGetFrameRate()));
     
 }
 
@@ -314,10 +333,6 @@ void testApp::keyPressed  (int key){
             }
             break;
                 
-            case 'f':
-                fixedPoint = !fixedPoint;
-                break;
-                
             case 13:
                 buildMode = !buildMode;
                 break;
@@ -347,6 +362,10 @@ void testApp::keyPressed  (int key){
                 
             case 'o': //obstacle mode
                 currentBuildItem = obstacle;
+                break;
+                
+            case 'k': //obstacle mode
+                kinectMode = !kinectMode; //toggle between using the osc recieved kinect points and the trackpad
                 break;
                 
                 
@@ -578,13 +597,13 @@ float testApp::distanceBetweenTouches(MTouch t1, MTouch t2){
 }
 
 void testApp::clearLevel(){
-    attractors.erase(attractors.begin(), attractors.begin()+attractors.size());
+//    attractors.erase(attractors.begin(), attractors.begin()+attractors.size());
     fixedAttractors.erase(fixedAttractors.begin(), fixedAttractors.begin()+fixedAttractors.size());
     emitters.erase(emitters.begin(), emitters.end());
     obstacles.erase(obstacles.begin(), obstacles.end());
     
-    ParticleAttractor newAttractor(-100, -100, 100, cyan); //attractor for the trackpad to access
+    /*ParticleAttractor newAttractor(-100, -100, 100, cyan); //attractor for the trackpad to access
     for (int i=0; i<5; i++){ //maybe to delete
         attractors.push_back(newAttractor);
-    }
+    }*/
 }
