@@ -26,9 +26,11 @@ class ParticleTarget {
     
     vector<Particle>fixedParticles;
     
-    int posX, posY, radius;
+    int posX, posY;
     
 public:
+    
+    float radius;
     
     ofColor color;
     ParticleTarget(int posX, int posY, int radius, ofColor color); //constructor (void)
@@ -39,7 +41,6 @@ public:
     
 	int draw(bool GL3D);
     int updatePos(int posX, int posY);
-    int updateRadius(int newRadius);
 	
 	
 };

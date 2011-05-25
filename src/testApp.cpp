@@ -11,7 +11,7 @@ ofColor tmp;
 ParticleAttractor attractorCursor(-100, -100, 100, tmp);
 ParticleEmitter emitterCursor(-100, -100, 0, 3, tmp);
 ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, tmp); //colors wont work yet
-ParticleTarget targetCursor(-100, -100, 50, tmp);
+ParticleTarget targetCursor(200, 200, 50, tmp);
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -22,7 +22,7 @@ bool alphaTrail = true, GL3D = false;
 bool buildMode = false; //allows build and setup
 bool kinectMode = false;
 
-enum buildItem {emitter, attractor, obstacle} currentBuildItem;
+enum buildItem {emitter, attractor, obstacle, target} currentBuildItem;
 
 bool saving = false; //when saving is true the key input functions are locked down
 string saveString;
@@ -75,12 +75,14 @@ void testApp::setup(){
     attractorCursor.color = red;
     emitterCursor.color = green;
     obstacleCursor.color = blue;
+    targetCursor.color = magenta;
     
-    ParticleAttractor newAttractor(-100, -100, 100, cyan);
+    ParticleAttractor newAttractor(-100, -100, 100, cyan); //attractors for the kinect or mouse to access
     for (int i=0; i<2; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
-    
+
+    /*
     ParticleEmitter newEmitter(100, 100, -45, 2, yellow);
     emitters.push_back(newEmitter);
     
@@ -90,7 +92,7 @@ void testApp::setup(){
     ParticleObstacle newObstacle(ofRectangle(300, 450, 200, 100), -45, green);
     obstacles.push_back(newObstacle);
     
-    
+    */
     currentBuildItem = attractor;
     
     
@@ -111,7 +113,9 @@ void testApp::update(){
     allAttractors.insert(allAttractors.end(), fixedAttractors.begin(), fixedAttractors.end());
     
     vector<ParticleObstacle>allObstacles; //concat vectors
+    vector<ParticleTarget>allTargets; //concat vectors
     allObstacles.insert(allObstacles.end(), obstacles.begin(), obstacles.end()); //chuck existing obstacles into temp vector
+    allTargets.insert(allTargets.end(), targets.begin(), targets.end()); //chuck existing targets into temp vector
     
     if (buildMode){
         
@@ -125,15 +129,23 @@ void testApp::update(){
             case emitter:
                 //do something
                 emitterCursor.updatePosition(mouseX, mouseY);
-                emitterCursor.update(allAttractors, obstacles);
+                emitterCursor.update(allAttractors, obstacles, targets);
                 break;
                 
             case obstacle:
                 //do something
                 obstacleCursor.updatePosDim(ofRectangle(mouseX, mouseY, obstacleCursor.rectangle.width, obstacleCursor.rectangle.height));
                 
-                allObstacles.insert(allObstacles.end(), obstacleCursor); //memory leak?
+                allObstacles.insert(allObstacles.end(), obstacleCursor);
 
+                break;
+                
+            case target:
+                //do something
+                targetCursor.updatePos(mouseX, mouseY);
+                
+                allTargets.insert(allTargets.end(), targetCursor);
+                
                 break;
                 
             default:
@@ -143,7 +155,7 @@ void testApp::update(){
     }
     
     for (int i=0; i<emitters.size(); i++){
-        emitters[i].update(allAttractors, allObstacles); //update every emitter (and in turn every particle will be updated, so the attractors will work)
+        emitters[i].update(allAttractors, allObstacles, allTargets); //update every emitter (and in turn every particle will be updated, so the attractors will work)
     }
     
     if (kinectMode){
@@ -242,6 +254,10 @@ void testApp::draw(){
         fixedAttractors[i].draw(GL3D);
     }
     
+    for (int i=0; i<targets.size(); i++){
+        targets[i].draw(GL3D);
+    }
+    
     for (int i=0; i<attractors.size(); i++){
         attractors[i].draw(GL3D);
     }
@@ -269,6 +285,11 @@ void testApp::draw(){
             case obstacle:
                 //do something
                 obstacleCursor.draw(GL3D);
+                break;
+                
+            case target:
+                //do something
+                targetCursor.draw(GL3D);
                 break;
                 
             default:
@@ -364,6 +385,10 @@ void testApp::keyPressed  (int key){
                 currentBuildItem = obstacle;
                 break;
                 
+            case 't': //obstacle mode
+                currentBuildItem = target;
+                break;
+                
             case 'k': //obstacle mode
                 kinectMode = !kinectMode; //toggle between using the osc recieved kinect points and the trackpad
                 break;
@@ -446,6 +471,10 @@ void testApp::mousePressed(int x, int y, int button){
                         obstacles.push_back(obstacleCursor);
                         break;
                         
+                    case target:
+                        targets.push_back(targetCursor);
+                        break;
+                        
                     default:
                         break;
                 }
@@ -509,6 +538,11 @@ void testApp::padUpdates(int & touchCount) {
                         //do something
                         obstacleCursor.rectangle.width += alteration/2;
                         obstacleCursor.rectangle.height += alteration/2;
+                        break;
+                        
+                    case target:
+                        //do something
+                        targetCursor.radius += alteration/4;
                         break;
                         
                     default:

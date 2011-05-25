@@ -39,7 +39,7 @@ public:
     
     void updatePosition(int newX, int newY);
     
-	void update(vector<ParticleAttractor>&attractors, vector<ParticleObstacle>&obstacles);
+	void update(vector<ParticleAttractor>&attractors, vector<ParticleObstacle>&obstacles, vector<ParticleTarget>&targets);
     void draw(bool GL3D);
 };
 

@@ -21,13 +21,14 @@ ParticleTarget::ParticleTarget(int newX, int newY, int newRadius, ofColor newCol
 
 int ParticleTarget::influenceParticles(vector<Particle>& particles){
     
-    //    cout << "obstacle is influencing "<<particles.size()<<" particles \n"; 
+        cout << "target is influencing "<<fixedParticles.size()<<" particles \n"; 
     
     for (int i=0; i<particles.size(); i++){
         
         if (particleInRange(particles[i].posX, particles[i].posY)){
             //            cout << "particle is inside obstacle\n";
             particles[i].destroy = true;
+            fixedParticles.push_back(particles[i]);
         }
     }
     
