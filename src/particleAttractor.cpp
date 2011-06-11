@@ -108,6 +108,7 @@ int ParticleAttractor::updatePos(int newX, int newY){
 int ParticleAttractor::draw(bool GL3D){
     ofSetColor(color.r, color.g, color.b);
     
+    
     if (GL3D){
         ofNoFill();
         ofCircle(posX, 10, posY, range, 'y');

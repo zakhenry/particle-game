@@ -40,7 +40,13 @@ void testApp::setup(){
     
     ofHideCursor();
     
-    
+    glEnable(GL_LINE_SMOOTH);
+    glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+    glClear (GL_COLOR_BUFFER_BIT);
+    glEnable (GL_BLEND);
+    glEnable (GL_POLYGON_SMOOTH);
+    glDisable (GL_DEPTH_TEST);
+    glLineWidth(4.0);
     
     beat.loadSound("sounds/electric.wav");
     beat.setLoop(true);
@@ -321,7 +327,14 @@ void testApp::draw(){
     
     if (alphaTrail){
         ofSetColor(0, 0, 0, 10);
-        ofRect(0, 0, ofGetWidth(), ofGetHeight());   
+        ofRect(0, 0, ofGetWidth(), ofGetHeight());
+        
+        //TRAIL 
+//        float trail = 16.0;
+//        glAccum(GL_MULT, trail/32); 
+//        glAccum(GL_ACCUM, 1 - (trail/32));
+//        glAccum(GL_RETURN, 1);
+        
     }
     
 }

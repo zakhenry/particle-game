@@ -67,7 +67,7 @@ int ParticleTarget::draw(bool GL3D, float&sweep){
      sweep = (float)fixedParticles.size()/2000; //0 to 1
      cout <<"particle count: "<<sweep<<"\n";
      if (sweep>1){
-         sweep = 1;
+//         sweep = 1;
      }
      float radius1 = radius-10;
      float radius2 = radius1-10;
