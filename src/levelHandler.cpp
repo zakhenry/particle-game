@@ -32,10 +32,10 @@ LevelHandler::LevelHandler(){ //stream constructor
 //    magenta = red;
 //    magenta.b = 255;
     
-    attractorColor = 0x0098D4;
-    particleColor = 0xE34700;
-    obstacleColor = 0x01BB00;
-    targetColor = 0xDEE8E9;
+    attractorColor = 0xFFCB9C;
+    particleColor = 0xFCFF9C;
+    obstacleColor = 0xE1A1FF;
+    targetColor = 0x9EF3FF;
     
     
 }

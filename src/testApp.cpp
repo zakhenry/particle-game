@@ -40,7 +40,7 @@ string saveString;
 //--------------------------------------------------------------
 void testApp::setup(){
 	ofSetCircleResolution(50);
-	ofBackground(0, 0, 0);
+	ofBackground(255, 255, 255);
 	ofSetWindowTitle("graphics example");
     
     ofHideCursor();
@@ -307,7 +307,7 @@ void testApp::draw(){
     
     
     if (alphaTrail){
-        ofSetColor(0, 0, 0, 10);
+        ofSetColor(250, 250, 250, 50);
         ofRect(0, 0, ofGetWidth(), ofGetHeight());
         
         //TRAIL 
