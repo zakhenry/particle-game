@@ -20,17 +20,22 @@ LevelHandler::LevelHandler(){ //stream constructor
     }
     cout << ")\n";
     
-    ofColor black;
-    black.r = 0;
-    black.g = 0;
-    black.b = 0;
-    red = blue = green = black;
+//    ofColor black;
+//    black.r = 0;
+//    black.g = 0;
+//    black.b = 0;
+//    red = blue = green = black;
+//    
+//    red.r = 255;
+//    green.g = 255;
+//    blue.b = 255;
+//    magenta = red;
+//    magenta.b = 255;
     
-    red.r = 255;
-    green.g = 255;
-    blue.b = 255;
-    magenta = red;
-    magenta.b = 255;
+    attractorColor = 0x0098D4;
+    particleColor = 0xE34700;
+    obstacleColor = 0x01BB00;
+    targetColor = 0xDEE8E9;
     
     
 }
@@ -111,7 +116,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("attractors");
     for (int i=0; i<xml.getNumTags("attractor"); i++){
         xml.pushTag("attractor", i);
-        ParticleAttractor newFixedAttractor(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("range", 0.0), red);
+        ParticleAttractor newFixedAttractor(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("range", 0.0), attractorColor);
         attractors.push_back(newFixedAttractor);
         //        cout << "posX is: "<<newFixedAttractor.posX<<", posY is: "<<newFixedAttractor.posY<<", range is: "<<newFixedAttractor.range<<"\n";
         xml.popTag();
@@ -121,7 +126,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("emitters");
     for (int i=0; i<xml.getNumTags("emitter"); i++){
         xml.pushTag("emitter", i);
-        ParticleEmitter newEmitter(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("angle", 0), xml.getValue("speed", 0.0), green); //int posX, int posY, float angle, float particleSpeed, ofColor color
+        ParticleEmitter newEmitter(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("angle", 0), xml.getValue("speed", 0.0), particleColor); //int posX, int posY, float angle, float particleSpeed, ofColor color
         emitters.push_back(newEmitter);
         xml.popTag();
     }
@@ -130,7 +135,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("obstacles");
     for (int i=0; i<xml.getNumTags("obstacle"); i++){
         xml.pushTag("obstacle", i);
-        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), blue); 
+        ParticleObstacle newObstacle(ofRectangle(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("width", 0), xml.getValue("height", 0)), xml.getValue("x", 0), obstacleColor); 
         obstacles.push_back(newObstacle);
         xml.popTag();
     }
@@ -139,7 +144,7 @@ bool LevelHandler::loadLevel(string name, vector<ParticleAttractor>&attractors, 
     xml.pushTag("targets");
     for (int i=0; i<xml.getNumTags("target"); i++){
         xml.pushTag("target", i);
-        ParticleTarget newTarget(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("radius", 0), magenta); //int posX, int posY, int radius, ofColor color
+        ParticleTarget newTarget(xml.getValue("x", 0), xml.getValue("y", 0), xml.getValue("radius", 0), targetColor); //int posX, int posY, int radius, ofColor color
         targets.push_back(newTarget);
         xml.popTag();
     }

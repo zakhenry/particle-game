@@ -29,13 +29,13 @@ public:
     
     int posX, posY;
     
-    ofColor color;
+    int color;
     
     float particleSpeed, streamAngle;
     string type;
     vector<Particle>particles;
 
-    ParticleEmitter(int posX, int posY, float angle, float particleSpeed, ofColor color); //stream constructor
+    ParticleEmitter(int posX, int posY, float angle, float particleSpeed, int color); //stream constructor
     
     void updatePosition(int newX, int newY);
     

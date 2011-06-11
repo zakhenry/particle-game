@@ -25,9 +25,9 @@ class ParticleAttractor {
 
 	
 public:
-    ofColor color;
+    int color;
     
-    ParticleAttractor(int posX, int posY, float range, ofColor color); //constructor (void)
+    ParticleAttractor(int posX, int posY, float range, int color); //constructor (void)
     
     int posX;
     int posY;

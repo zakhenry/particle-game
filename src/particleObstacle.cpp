@@ -9,7 +9,7 @@
 #include "particleObstacle.h"
 
 
-ParticleObstacle::ParticleObstacle(ofRectangle newRectangle, float newRotation, ofColor newColor){ //constructor
+ParticleObstacle::ParticleObstacle(ofRectangle newRectangle, float newRotation, int newColor){ //constructor
     cout << "Particle obstacle created \n";
     
     rectangle = newRectangle;
@@ -47,7 +47,7 @@ int ParticleObstacle::updatePosDim(ofRectangle newRect){
 }
 
 int ParticleObstacle::draw(bool GL3D){
-    ofSetColor(color.r, color.g, color.b);
+    ofSetColor(color);
     
     if (GL3D){
         ofNoFill();

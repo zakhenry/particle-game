@@ -9,7 +9,7 @@
 #include "particleTarget.h"
 
 
-ParticleTarget::ParticleTarget(int newX, int newY, int newRadius, ofColor newColor){ //constructor
+ParticleTarget::ParticleTarget(int newX, int newY, int newRadius, int newColor){ //constructor
     cout << "Particle target created \n";
     
     posX = newX;
@@ -44,7 +44,7 @@ int ParticleTarget::updatePos(int newX, int newY){
 }
 
 int ParticleTarget::draw(bool GL3D, float&sweep){
-    ofSetColor(color.r, color.g, color.b);
+    ofSetColor(color);
     
     ofFill();		// draw "filled shapes"
     ofCircle(posX, posY, radius);

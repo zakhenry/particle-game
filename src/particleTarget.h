@@ -35,8 +35,8 @@ public:
     
     bool full;
     
-    ofColor color;
-    ParticleTarget(int posX, int posY, int radius, ofColor color); //constructor (void)
+    int color;
+    ParticleTarget(int posX, int posY, int radius, int color); //constructor (void)
     
     
     int influenceParticles(vector<Particle>& particles);

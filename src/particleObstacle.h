@@ -22,10 +22,10 @@ class ParticleObstacle {
     
 public:
     
-    ofColor color;
+    int color;
     ofRectangle rectangle;
     float rotation;
-    ParticleObstacle(ofRectangle rectangle, float rotation, ofColor color); //constructor (void)
+    ParticleObstacle(ofRectangle rectangle, float rotation, int color); //constructor (void)
     
     
     int influenceParticles(vector<Particle>& particles);

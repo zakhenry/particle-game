@@ -21,7 +21,7 @@ class LevelHandler {
 	//private
     ofxXmlSettings xml;
     vector<string>levels;
-    ofColor red, green, blue, magenta;
+    int attractorColor, particleColor, obstacleColor, targetColor;
     
 public:
     

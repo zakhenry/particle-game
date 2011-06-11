@@ -8,10 +8,15 @@
 
 ofColor tmp;
 
-ParticleAttractor attractorCursor(-100, -100, 100, tmp);
-ParticleEmitter emitterCursor(-100, -100, 0, 3, tmp);
-ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, tmp); //colors wont work yet
-ParticleTarget targetCursor(200, 200, 50, tmp);
+int attractorColor = 0x0098D4;
+int particleColor = 0xE34700;
+int obstacleColor = 0x01BB00;
+int targetColor = 0xDEE8E9;
+
+ParticleAttractor attractorCursor(-100, -100, 100, attractorColor);
+ParticleEmitter emitterCursor(-100, -100, 0, 3, particleColor);
+ParticleObstacle obstacleCursor(ofRectangle(-100, -100, 100, 100), 0, obstacleColor); //colors wont work yet
+ParticleTarget targetCursor(200, 200, 50, targetColor);
 
 int emitterX, emitterY;
 float currentTouchScale = 0;
@@ -55,6 +60,10 @@ void testApp::setup(){
     
     
     
+    
+    
+    
+    
 //	ofSetFrameRate(60); // if vertical sync is off, we can go a bit fast... this caps the framerate at 60fps.
     
     // --- add the listeners
@@ -63,36 +72,8 @@ void testApp::setup(){
     ofAddListener(pad.touchRemoved, this, &testApp::removedTouch);
     
     
-    playerColor.r = 0;
-    playerColor.g = 255;
-    playerColor.b = 200;
-    
-    black.r = 0;
-    black.g = 0;
-    black.b = 0;
-    
-    red = blue = green = cyan = magenta = yellow = black;
-    
-    red.r = 255;
-    green.g = 255;
-    blue.b = 255;
-    
-    cyan.b = 255;
-    cyan.g = 255;
-    magenta.r = 255;
-    magenta.b = 255;
-    yellow.r = 255;
-    yellow.g = 255;
-    
-    particleColor = playerColor;
-    particleColor.r = 200;
-    
-    attractorCursor.color = red;
-    emitterCursor.color = green;
-    obstacleCursor.color = blue;
-    targetCursor.color = magenta;
-    
-    ParticleAttractor newAttractor(-100, -100, 100, cyan); //attractors for the kinect or mouse to access
+    int cursorColor = 0xabcdef;
+    ParticleAttractor newAttractor(-100, -100, 100, cursorColor); //attractors for the kinect or mouse to access
     for (int i=0; i<2; i++){ //maybe to delete
         attractors.push_back(newAttractor);
     }
@@ -523,7 +504,7 @@ void testApp::mousePressed(int x, int y, int button){
             case 2: //right click
             {
                 if (currentBuildItem==attractor){
-                    ParticleAttractor newUserAttractor(x, y, attractorCursor.range, cyan);
+                    ParticleAttractor newUserAttractor(x, y, attractorCursor.range, attractorColor);
                     attractors.push_back(newUserAttractor);
                 }
                 

@@ -10,7 +10,7 @@
 
 
 
-Particle::Particle(float newX, float newY, float newSpeed, float newDirection, ofColor newColor){ //constructor
+Particle::Particle(float newX, float newY, float newSpeed, float newDirection, int newColor){ //constructor
     
     posX = newX;
     posY = newY;
@@ -55,7 +55,7 @@ bool Particle::inBoundingBox(int boundingX, int boundingY, int boxWidth, int box
 
 int Particle::draw(bool GL3D){
     
-    ofSetColor(color.r, color.g, color.b);
+    ofSetColor(color);
     
     if (GL3D){
         glVertex3f(posX, 10, posY);

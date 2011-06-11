@@ -8,7 +8,7 @@
 
 #include "particleEmitter.h"
 
-ParticleEmitter::ParticleEmitter(int newPosX, int newPosY, float angle, float newParticleSpeed, ofColor newColor){ //stream constructor
+ParticleEmitter::ParticleEmitter(int newPosX, int newPosY, float angle, float newParticleSpeed, int newColor){ //stream constructor
 
     cout << "Particle stream created\n";
     lastSecondFired = 0;

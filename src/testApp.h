@@ -49,7 +49,9 @@ public:
     vector<ParticleObstacle>obstacles;
     vector<ParticleTarget>targets;
     
-    ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
+//    ofColor playerColor, particleColor, red, green, blue, cyan, magenta, yellow, black;
+    int attractorColor, particleColor, obstacleColor, targetColor;
+    
     
     vector<ofPoint>touches2;
     vector<MTouch> touches;
@@ -63,6 +65,7 @@ public:
     
     
     LevelHandler levelHandler;
+
     
     //private:
     

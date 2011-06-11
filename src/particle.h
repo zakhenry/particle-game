@@ -21,7 +21,7 @@ class Particle {
 	
 public:
     
-    Particle(float posX, float posY, float speed, float direction, ofColor color); //constructor (void)
+    Particle(float posX, float posY, float speed, float direction, int color); //constructor (void)
     
     float posX;
     float posY;
@@ -29,7 +29,7 @@ public:
     float speed;
     float direction; //degrees
     
-    ofColor color;
+    int color;
     
     void update();
     

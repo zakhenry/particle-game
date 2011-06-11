@@ -10,7 +10,7 @@
 #include "particleAttractor.h"
 
 
-ParticleAttractor::ParticleAttractor(int newX, int newY, float newRange, ofColor newColor){ //constructor
+ParticleAttractor::ParticleAttractor(int newX, int newY, float newRange, int newColor){ //constructor
 //	cout << "Particle attractor created \n";
     posX = newX;
     posY = newY;
@@ -106,7 +106,7 @@ int ParticleAttractor::updatePos(int newX, int newY){
 
 
 int ParticleAttractor::draw(bool GL3D){
-    ofSetColor(color.r, color.g, color.b);
+    ofSetColor(color);
     
     
     if (GL3D){
